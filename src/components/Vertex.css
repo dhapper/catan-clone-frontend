@@ -1,0 +1,14 @@
+.vertex {
+    stroke: black;
+    stroke-width: 2;
+    cursor: pointer;
+
+    transition:
+        r 0.15s ease,
+        fill 0.15s ease;
+}
+
+.vertex:hover {
+    r: var(--hover-radius);
+    fill: rgb(116, 226, 116);
+}
