@@ -21,11 +21,39 @@ function HexTile({ tile, size }) {
         .join(" ");
 
     return (
-        <polygon
-            points={points}
-            fill="lightgray"
-            stroke="black"
-        />
+        <g>
+            <polygon
+                points={points}
+                fill="lightgray"
+                stroke="black"
+            />
+
+            <text
+                x={tile.x}
+                y={tile.y - 10}
+                textAnchor="middle"
+            >
+                {tile.type}
+            </text>
+
+            <text
+                x={tile.x}
+                y={tile.y + 10}
+                textAnchor="middle"
+            >
+                {tile.resource}
+            </text>
+
+            {tile.numberToken !== null && (
+                <text
+                    x={tile.x}
+                    y={tile.y + 30}
+                    textAnchor="middle"
+                >
+                    {tile.numberToken}
+                </text>
+            )}
+        </g>
     );
 }
 

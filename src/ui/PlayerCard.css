@@ -1,0 +1,50 @@
+.player-card {
+    width: 400px;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+
+.player-card.disconnected {
+    opacity: 0.45;
+}
+
+.player-color {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.player-info {
+    text-align: left;
+}
+
+.player-name {
+    font-weight: bold;
+}
+
+.player-status {
+    font-size: 0.85rem;
+}
+
+.player-indicators {
+    margin-left: auto;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.player-you {
+    /* top right */
+}
+
+.player-host {
+    /* bottom right */
+}

@@ -2,7 +2,7 @@ import HexTile from "./HexTile";
 import Vertex from "./Vertex";
 import Edge from "./Edge";
 
-function Board({ board, onVertexClick, onEdgeClick }) {
+function Board({ board, phase, subphase, currentPlayerId, myPlayerId, onVertexClick, onEdgeClick }) {
     const HEX_SIZE = board.hexSize;
 
     const minX = Math.min(...board.tiles.map(tile => tile.x));
@@ -17,6 +17,16 @@ function Board({ board, onVertexClick, onEdgeClick }) {
 
     const translateX = padding - minX;
     const translateY = padding - minY;
+
+    const canPlaceSettlement =
+        phase === "setup" &&
+        subphase === "placing_settlement" &&
+        currentPlayerId === myPlayerId;
+
+    const canPlaceRoad =
+        phase === "setup" &&
+        subphase === "placing_road" &&
+        currentPlayerId === myPlayerId;
 
     return (
         <svg
@@ -42,8 +52,8 @@ function Board({ board, onVertexClick, onEdgeClick }) {
                         radius={HEX_SIZE / 6}
                         vertices={board.vertices}
                         players={board.players}
-                        buildableRoads={board.buildableRoads}
-                        subphase={board.subphase}
+                        buildableRoads={canPlaceRoad ? board.buildableRoads : []}
+                        subphase={subphase}
                         onEdgeClick={onEdgeClick}
                     />
                 ))}
@@ -55,8 +65,8 @@ function Board({ board, onVertexClick, onEdgeClick }) {
                         vertex={vertex}
                         radius={HEX_SIZE / 5}
                         players={board.players}
-                        buildableSettlements={board.buildableSettlements}
-                        subphase={board.subphase}
+                        buildableSettlements={canPlaceSettlement ? board.buildableSettlements : []}
+                        subphase={subphase}
                         onVertexClick={onVertexClick}
                     />
                 ))}
