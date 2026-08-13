@@ -1,61 +1,73 @@
-import "./Setup.css";
+import "./Players.css";
 import socket from "../socket";
 import PlayerCard from "../ui/PlayerCard";
 import { GAME_PHASES } from "../constants/GameConstants";
+import "./Panel.css";
 
-function Setup({
+function Players({
     players,
     myPlayerId,
     phase,
     subphase,
     turnOrderRolls
 }) {
+
     const sortedPlayers = [...players].sort((a, b) => {
-        const aRolls = turnOrderRolls[a.id];
-        const bRolls = turnOrderRolls[b.id];
+        if (phase === GAME_PHASES.SETUP) {
+            const aRolls = turnOrderRolls[a.id];
+            const bRolls = turnOrderRolls[b.id];
 
-        const aHasRolled = Array.isArray(aRolls);
-        const bHasRolled = Array.isArray(bRolls);
+            const aHasRolled = Array.isArray(aRolls);
+            const bHasRolled = Array.isArray(bRolls);
 
-        // Players who have rolled go above players who haven't.
-        if (aHasRolled !== bHasRolled) {
-            return aHasRolled ? -1 : 1;
-        }
+            if (aHasRolled !== bHasRolled) {
+                return aHasRolled ? -1 : 1;
+            }
 
-        // Neither player has rolled yet.
-        if (!aHasRolled) {
+            if (!aHasRolled) {
+                return (
+                    Number(a.id.slice(1)) -
+                    Number(b.id.slice(1))
+                );
+            }
+
+            const aTotal = aRolls[0] + aRolls[1];
+            const bTotal = bRolls[0] + bRolls[1];
+
+            if (aTotal !== bTotal) {
+                return bTotal - aTotal;
+            }
+
             return (
                 Number(a.id.slice(1)) -
                 Number(b.id.slice(1))
             );
         }
 
-        const aTotal = aRolls[0] + aRolls[1];
-        const bTotal = bRolls[0] + bRolls[1];
-
-        // Higher roll total goes first.
-        if (aTotal !== bTotal) {
-            return bTotal - aTotal;
-        }
-
-        // Tie-breaker: join order.
         return (
             Number(a.id.slice(1)) -
             Number(b.id.slice(1))
         );
     });
 
+    function claimPlayer(playerId) {
+        socket.emit("player:claim", playerId);
+    }
+
     return (
-        <div className="setup">
-            <div className="setup-player-list">
+        <div className="panel players">
+            <p>Players</p>
+
+            <div className="player-list">
                 {sortedPlayers.map(player => (
                     <div
-                        className="setup-player-row"
+                        className="player-row"
                         key={player.id}
                     >
                         <PlayerCard
                             player={player}
                             myPlayerId={myPlayerId}
+                            phase={phase}
                         />
 
                         {phase === GAME_PHASES.SETUP && (
@@ -88,9 +100,25 @@ function Setup({
                     </div>
                 ))}
             </div>
-            <p>*Ties are decided by join order</p>
+
+            <div className="player-list">
+                {sortedPlayers.map(player => (
+                    !player.connected && !myPlayerId && (
+                        <button
+                            key={player.id}
+                            onClick={() => claimPlayer(player.id)}
+                        >
+                            Play as {player.name}
+                        </button>
+                    )
+                ))}
+            </div>
+
+            {phase === GAME_PHASES.SETUP && (
+                <p>*Ties are decided by join order</p>
+            )}
         </div>
     );
 }
 
-export default Setup;
+export default Players;

@@ -1,14 +1,27 @@
 .vertex {
     stroke: black;
-    stroke-width: 2;
-    cursor: pointer;
-
+    stroke-width: 4;
     transition:
         r 0.15s ease,
         fill 0.15s ease;
 }
 
-.vertex:hover {
+.vertex-buildable {
+    cursor: pointer;
+}
+
+.vertex-buildable:hover .vertex {
     r: var(--hover-radius);
     fill: rgb(116, 226, 116);
+}
+
+.vertex-existing {
+    cursor: default;
+}
+
+.city-star {
+    fill: white;
+    font-size: 28px;
+    font-weight: bold;
+    pointer-events: none;
 }

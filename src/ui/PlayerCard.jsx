@@ -1,6 +1,10 @@
 import "./PlayerCard.css";
 
-function PlayerCard({ player, myPlayerId }) {
+function PlayerCard({
+    player,
+    myPlayerId,
+    phase
+}) {
     return (
         <div
             className={`player-card ${
@@ -26,6 +30,14 @@ function PlayerCard({ player, myPlayerId }) {
                         ? "Connected"
                         : "Available"}
                 </div>
+
+                {phase === "gameplay" && (
+                    <div className="player-stats">
+                        <span>VP: 1</span>
+                        <span>R: 2</span>
+                        <span>DC: 3</span>
+                    </div>
+                )}
             </div>
 
             <div className="player-indicators">

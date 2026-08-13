@@ -26,7 +26,9 @@ export async function buildSettlement(vertexId) {
 
     if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to build settlement");
+        throw new Error(
+            error.error || "Failed to build settlement"
+        );
     }
 
     return response.json();
@@ -48,7 +50,33 @@ export async function buildRoad(edgeId) {
 
     if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to build road");
+        throw new Error(
+            error.error || "Failed to build road"
+        );
+    }
+
+    return response.json();
+}
+
+export async function buildCity(vertexId) {
+    const response = await fetch(
+        `${API_URL}/game/build/city`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                vertexId
+            })
+        }
+    );
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(
+            error.error || "Failed to build city"
+        );
     }
 
     return response.json();

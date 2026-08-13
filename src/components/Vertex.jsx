@@ -6,12 +6,31 @@ function Vertex({
     radius,
     players,
     buildableSettlements,
+    buildableCities,
     subphase,
+    buildMode,
     onVertexClick
 }) {
     let fill = "white";
 
-    if (vertex.building) {
+    const isSetupSettlementPhase =
+        subphase === SETUP_SUBPHASES.PLACING_SETTLEMENT;
+
+    const isSettlementBuildable =
+        (
+            isSetupSettlementPhase ||
+            buildMode === "settlement"
+        ) &&
+        buildableSettlements.includes(vertex.id);
+
+    const isCityBuildable =
+        buildMode === "city" &&
+        buildableCities.includes(vertex.id);
+
+    // Show valid city upgrades as white.
+    if (isCityBuildable) {
+        fill = "white";
+    } else if (vertex.building) {
         const owner = players.find(
             player => player.id === vertex.building.playerId
         );
@@ -19,32 +38,49 @@ function Vertex({
         fill = owner?.color ?? "white";
     }
 
-    const isSettlementPhase =
-        subphase === SETUP_SUBPHASES.PLACING_SETTLEMENT;
-
     const isBuildable =
-        isSettlementPhase &&
-        buildableSettlements.includes(vertex.id);
+        isSettlementBuildable ||
+        isCityBuildable;
 
-    // Show existing buildings and valid settlement placement spots.
+    // Nothing to display here.
     if (!vertex.building && !isBuildable) {
         return null;
     }
 
+    const buildingType = vertex.building?.type;
+
     return (
-        <circle
-            className="vertex"
-            cx={vertex.x}
-            cy={vertex.y}
-            r={radius}
-            style={{ "--hover-radius": radius * 1.2 }}
-            fill={fill}
+        <g
+            className={isBuildable ? "vertex-buildable" : "vertex-existing"}
             onClick={() => {
                 if (isBuildable) {
                     onVertexClick(vertex.id);
                 }
             }}
-        />
+        >
+            <circle
+                className="vertex"
+                cx={vertex.x}
+                cy={vertex.y}
+                r={radius}
+                style={{
+                    "--hover-radius": radius * 1.2
+                }}
+                fill={fill}
+            />
+
+            {buildingType === "city" && (
+                <text
+                    x={vertex.x}
+                    y={vertex.y}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    className="city-star"
+                >
+                    ★
+                </text>
+            )}
+        </g>
     );
 }
 

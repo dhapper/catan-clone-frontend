@@ -1,0 +1,80 @@
+.game-layout {
+    --left-width: max(25vw, 300px);
+    --right-width: max(20vw, 200px);
+
+    display: grid;
+    grid-template-columns:
+        var(--left-width)
+        minmax(0, 1fr)
+        var(--right-width);
+
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+
+    position: relative;
+}
+
+.game-left {
+    grid-column: 1;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 16px;
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    z-index: 2;
+
+    border-right: solid 3px white;
+    background-color: black;
+}
+
+.game-board {
+    grid-column: 2;
+
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    z-index: 0;
+
+    touch-action: none;
+}
+
+.game-right {
+    grid-column: 3;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 16px;
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    z-index: 2;
+
+    border-left: solid 3px white;
+    background-color: black;
+}
+
+@media (max-width: 900px) {
+    .game-right {
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        width: var(--right-width);
+        height: 100%;
+    }
+}

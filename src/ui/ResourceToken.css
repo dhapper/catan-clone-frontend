@@ -1,0 +1,52 @@
+.resource-token {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    border: 3px solid white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.resource-token img {
+    width: 50px;
+    height: 50px;
+}
+
+.resource-token-badge {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+
+    min-width: 30px;
+    height: 30px;
+
+    padding: 0 5px;
+
+    border-radius: 16px;
+    background: #6d5029;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    border: 3px solid white;
+}
+
+.resource-token-empty {
+    filter: grayscale(100%);
+    opacity: 0.5;
+    border: 3px solid grey
+}
+
+.resource-token-badge-empty {
+    border: 3px solid grey
+}

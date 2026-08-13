@@ -1,0 +1,60 @@
+.setup-player-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.turn-order-rolls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.turn-order-roll {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.turn-order-rolls {
+    width: 23%;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5%;
+}
+
+.player-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.player-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 2%;
+}
+
+.player-card {
+    box-sizing: border-box;
+}
+
+/* Setup cards have room reserved for the roll/dice area */
+.player-row:has(.turn-order-rolls) .player-card {
+    width: 75%;
+    flex-shrink: 0;
+}
+
+/* Gameplay cards use the full parent width */
+.player-row:not(:has(.turn-order-rolls)) .player-card {
+    width: 100%;
+}

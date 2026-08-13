@@ -1,8 +1,7 @@
 import "./Edge.css";
-import { SETUP_SUBPHASES } from "../constants/GameConstants";
 
 
-function Edge({ edge, vertices, radius, players, buildableRoads, subphase, onEdgeClick }) {
+function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) {
     const vertexA = vertices.find(
         vertex => vertex.id === edge.vertices[0]
     );
@@ -14,11 +13,7 @@ function Edge({ edge, vertices, radius, players, buildableRoads, subphase, onEdg
     const centerX = (vertexA.x + vertexB.x) / 2;
     const centerY = (vertexA.y + vertexB.y) / 2;
 
-    const isRoadPhase =
-        subphase === SETUP_SUBPHASES.PLACING_ROAD;
-
     const isBuildable =
-        isRoadPhase &&
         buildableRoads.includes(edge.id);
 
     let fill = "white";
@@ -43,17 +38,24 @@ function Edge({ edge, vertices, radius, players, buildableRoads, subphase, onEdg
         vertexB.x - vertexA.x
     ) * 180 / Math.PI;
 
-    const roadLength = Math.sqrt(
+    const roadTrim = 30;
+
+    const fullRoadLength = Math.sqrt(
         Math.pow(vertexB.x - vertexA.x, 2) +
         Math.pow(vertexB.y - vertexA.y, 2)
     );
+
+    const roadLength = fullRoadLength - roadTrim * 2;
+
+    const radiusTrim = 4;
+    radius = radius - radiusTrim;
 
     if (hasRoad) {
         return (
             <rect
                 className="road"
                 x={centerX - roadLength / 2}
-                y={centerY - radius / 2}
+                y={centerY - radius / 2 + radiusTrim / 2}
                 width={roadLength}
                 height={radius}
                 rx={radius / 3}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import socket from "../socket";
 import "./Lobby.css";
+import "./Panel.css";
 import PlayerCard from "../ui/PlayerCard";
 
 function Lobby({ players, colors, myPlayerId, phase }) {
@@ -36,7 +37,8 @@ function Lobby({ players, colors, myPlayerId, phase }) {
     }
 
     return (
-        <div className="lobby">
+        <div className="panel lobby">
+            <p>lobby</p>
 
             <div className="player-list">
                 {players.map(player => (

@@ -1,5 +1,6 @@
 .player-card {
-    width: 400px;
+    width: auto;
+
     box-sizing: border-box;
 
     display: flex;
@@ -47,4 +48,9 @@
 
 .player-host {
     /* bottom right */
+}
+
+.player-stats {
+    display: flex;
+    gap: 8px;
 }
