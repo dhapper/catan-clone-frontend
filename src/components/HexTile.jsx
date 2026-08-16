@@ -11,7 +11,12 @@ import stoneIcon from "../assets/icons/transparent_res/stone-pile.svg";
 import wheatIcon from "../assets/icons/transparent_res/wheat.svg";
 import woodIcon from "../assets/icons/transparent_res/wood-pile.svg";
 
+import Robber from "./Robber";
+
 import { GAMEPLAY_SUBPHASES } from "../constants/GameConstants";
+
+import "./HexTile.css"
+// import "./Vertex.css"
 
 const TILE_BACKGROUNDS = {
     desert: desertBg,
@@ -30,7 +35,7 @@ const RESOURCE_ICONS = {
     wood: woodIcon
 };
 
-function HexTile({ tile, size, diceRoll, subphase }) {
+function HexTile({ tile, size, diceRoll, subphase, canPlaceRobber }) {
     const iconYOffset = -0.6;
     const iconScale = 0.6;
 
@@ -153,6 +158,15 @@ function HexTile({ tile, size, diceRoll, subphase }) {
                     </text>
                 </>
             )}
+
+            <Robber
+                x={tile.x}
+                y={tile.y}
+                size={size}
+                // canPlace={canPlaceRobber}
+                canPlace={canPlaceRobber}
+            />
+
         </g>
     );
 }

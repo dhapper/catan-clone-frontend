@@ -2,6 +2,7 @@ import { useRef } from "react";
 import HexTile from "./HexTile";
 import Vertex from "./Vertex";
 import Edge from "./Edge";
+import Port from "./Port";
 
 function Board({
     board,
@@ -62,6 +63,11 @@ function Board({
             buildMode === "road" &&
             currentPlayerId === myPlayerId
         );
+
+    const canPlaceRobber =
+        // subphase === "placeRobber" &&
+        subphase === "placing_settlement" &&
+        currentPlayerId === myPlayerId;
 
     const isDragging = useRef(false);
     const dragStart = useRef({ x: 0, y: 0 });
@@ -186,6 +192,8 @@ function Board({
         }
     }
 
+    console.log("PORTS:", board.ports);
+
     return (
         <svg
             width={boardWidth}
@@ -213,6 +221,15 @@ function Board({
                 `}
             >
 
+                {/* Ports */}
+                {board.ports.map((port) => (
+                    <Port
+                        key={port.edgeId}
+                        port={port}
+                        vertices={board.vertices}
+                    />
+                ))}
+
                 {/* Hex tiles */}
                 {board.tiles.map((tile) => (
                     <HexTile
@@ -221,6 +238,7 @@ function Board({
                         size={HEX_SIZE}
                         diceRoll={diceRoll}
                         subphase={subphase}
+                        canPlaceRobber={canPlaceRobber}
                     />
                 ))}
 

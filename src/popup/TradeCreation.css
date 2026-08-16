@@ -1,0 +1,12 @@
+.tradeUI {
+    display: flex;
+    flex-direction: row;
+}
+
+.tradeButtons {
+    display: flex;
+    flex-direction: column;
+    margin: 12px auto; /* top/bottom 12px, left/right auto for horizontal centering */
+    justify-content: center;
+    width: min-content;
+}

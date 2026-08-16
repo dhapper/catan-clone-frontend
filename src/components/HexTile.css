@@ -1,0 +1,15 @@
+.placeable {
+    stroke: black;
+    stroke-width: 4;
+    cursor: pointer;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+        transform 0.15s ease,
+        fill 0.15s ease;
+}
+
+.placeable:hover {
+    transform: scale(1.2);
+    fill: rgb(116, 226, 116);
+}

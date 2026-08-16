@@ -1,10 +1,13 @@
 import "./Inventory.css";
 import ResourceToken from "../ui/ResourceToken";
+import PortBadge from "../ui/PortBadge";
 
 function Inventory({ player }) {
     if (!player) {
         return null;
     }
+
+    console.log("PLAYER PORTS:", player.ports);
 
     return (
         <div className="panel">
@@ -40,6 +43,22 @@ function Inventory({ player }) {
                     amount={player.resources.ore}
                     hideIfZero
                 />
+            </div>
+
+            <div className="inventory-ports">
+                {player.ports?.map((port) => (
+                    <div className="inventory-port" key={port.edgeId}>
+                        <svg
+                            width="90"
+                            height="90"
+                            viewBox="-60 -60 120 120"
+                        >
+                            <g transform="scale(1)">
+                                <PortBadge port={port} />
+                            </g>
+                        </svg>
+                    </div>
+                ))}
             </div>
         </div>
     );

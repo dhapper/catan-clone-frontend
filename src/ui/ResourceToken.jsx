@@ -28,7 +28,12 @@ const RESOURCE_BACKGROUNDS = {
     wood: forestBg
 };
 
-function ResourceToken({ resource, amount, hideIfZero = false }) {
+function ResourceToken({
+    resource,
+    amount,
+    hideIfZero = false,
+    hideAmount = false
+}) {
     if (hideIfZero && amount === 0) {
         return null;
     }
@@ -36,7 +41,9 @@ function ResourceToken({ resource, amount, hideIfZero = false }) {
     const icon = RESOURCE_ICONS[resource];
     const background = RESOURCE_BACKGROUNDS[resource];
 
-    const isEmpty = amount === 0;
+    const isEmpty =
+        amount === 0 &&
+        !hideAmount;
 
     return (
         <div
@@ -48,12 +55,14 @@ function ResourceToken({ resource, amount, hideIfZero = false }) {
         >
             <img src={icon} alt={resource} />
 
-            <span
-                className={`resource-token-badge ${isEmpty ? "resource-token-badge-empty" : ""
-                    }`}
-            >
-                {amount}
-            </span>
+            {!hideAmount && (
+                <span
+                    className={`resource-token-badge ${isEmpty ? "resource-token-badge-empty" : ""
+                        }`}
+                >
+                    {amount}
+                </span>
+            )}
         </div>
     );
 }

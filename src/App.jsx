@@ -9,6 +9,10 @@ import Players from "./panels/Players";
 import Bank from "./panels/Bank";
 import Inventory from "./panels/Inventory";
 import Actions from "./panels/Actions";
+import TradeCreation from "./popup/TradeCreation"
+import TradeProposal from "./popup/TradeProposal";
+import TradeAcceptor from "./popup/TradeAcceptor";
+import Discard from "./popup/Discard";
 
 function App() {
     const [board, setBoard] = useState(null);
@@ -23,6 +27,8 @@ function App() {
     const [bank, setBank] = useState(null);
     const [buildMode, setBuildMode] = useState(null);
     const [buildAvailability, setBuildAvailability] = useState(null);
+    const [currentTrade, setCurrentTrade] = useState(null);
+    const [showTradeCreation, setShowTradeCreation] = useState(false);
 
     const [boardScale, setBoardScale] = useState(1);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
@@ -46,6 +52,7 @@ function App() {
             setDiceRoll(data.diceRoll);
             setBank(data.bank);
             setBuildAvailability(data.buildAvailability);
+            setCurrentTrade(data.currentTrade);
 
             getGame()
                 .then((data) => {
@@ -76,9 +83,10 @@ function App() {
             });
     }, []);
 
-    // set build mode to null when the turn changes
+    // when turn changes
     useEffect(() => {
         setBuildMode(null);
+        setShowTradeCreation(false);
     }, [currentPlayerId]);
 
     async function handleVertexClick(vertexId) {
@@ -149,6 +157,10 @@ function App() {
         }
     }
 
+    const myPlayer = players.find(
+        player => player.id === myPlayerId
+    );
+
     function recenterBoard() {
         setBoardPan({ x: 0, y: 0 });
     }
@@ -211,12 +223,52 @@ function App() {
                         buildableRoads={board.buildableRoads}
                         buildableSettlements={board.buildableSettlements}
                         buildableCities={board.buildableCities}
+                        setShowTradeCreation={setShowTradeCreation}
                     />
                 )}
 
             </div>
 
+            {/* <Discard
+                player={players.find(
+                    player => player.id === myPlayerId
+                )}
+                discardAmount={3}
+            />*/}
+
+
+            {phase === GAME_PHASES.GAMEPLAY &&
+                subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                currentTrade && (
+                    currentTrade.playerId === myPlayerId ? (
+                        <TradeAcceptor
+                            player={myPlayer}
+                            currentTradeOffer={currentTrade}
+                            currentPlayerId={myPlayerId}
+                            players={players}
+                        />
+                    ) : (
+                        <TradeProposal
+                            player={myPlayer}
+                            currentTradeOffer={currentTrade}
+                            currentPlayerId={currentTrade.playerId}
+                        />
+                    )
+                )}
+
+            {phase === GAME_PHASES.GAMEPLAY &&
+                subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                currentPlayerId === myPlayerId &&
+                !currentTrade &&
+                showTradeCreation && (
+                    <TradeCreation
+                        player={myPlayer}
+                        onCancel={() => setShowTradeCreation(false)}
+                    />
+                )}
+
             <div className="game-board">
+
                 <Board
                     board={board}
                     phase={phase}

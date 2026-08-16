@@ -14,3 +14,9 @@ export const GAMEPLAY_SUBPHASES = Object.freeze({
     PRODUCTION: "production",
     ACTION: "action"
 });
+
+export const STRUCTURES = Object.freeze({
+    ROAD: "road",
+    SETTLEMENT: "settlement",
+    CITY: "city"
+});

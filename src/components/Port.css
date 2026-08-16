@@ -1,0 +1,17 @@
+.port-background {
+    fill: #382c22;
+    stroke: black;
+    stroke-width: 4px;
+}
+
+.port-offer {
+    font-size: 20px;
+    font-weight: bold;
+    fill: white;
+}
+
+.port-any {
+    fill: white;
+    font-size: 40px;
+    /* font-weight: bold; */
+}

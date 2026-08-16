@@ -4,3 +4,15 @@
     gap: 12px;
     justify-content: center;
 }
+
+.inventory-ports {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0px;
+    align-items: center;
+}
+
+/* .inventory-port {
+    width: min-content;
+    height: min-content;
+} */

@@ -1,0 +1,19 @@
+.resourceSection {
+    display: flex;
+    flex-direction: row;
+    margin: 12px;
+}
+
+.quantityButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: min-content;
+    margin: 0 10px;
+    justify-content: center;
+}
+
+.resourceSectionGroup {
+    display: flex;
+    flex-direction: column;
+}

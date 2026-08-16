@@ -1,6 +1,7 @@
 import "./Actions.css";
 import { GAMEPLAY_SUBPHASES } from "../constants/GameConstants";
 import socket from "../socket";
+import { STRUCTURES } from "../constants/GameConstants";
 
 function Actions({
     myPlayerId,
@@ -14,7 +15,8 @@ function Actions({
     buildAvailability,
     buildableRoads,
     buildableSettlements,
-    buildableCities
+    buildableCities,
+    setShowTradeCreation
 }) {
     const isMyTurn = myPlayerId === currentPlayerId;
 
@@ -83,9 +85,9 @@ function Actions({
                                 disabled={!canBuildRoad}
                                 onClick={() =>
                                     setBuildMode(
-                                        buildMode === "road"
+                                        buildMode === STRUCTURES.ROAD
                                             ? null
-                                            : "road"
+                                            : STRUCTURES.ROAD
                                     )
                                 }
                             >
@@ -94,16 +96,34 @@ function Actions({
 
                             <button
                                 disabled={!canBuildSettlement}
-                                onClick={() => setBuildMode("settlement")}
+                                onClick={() =>
+                                    setBuildMode(
+                                        buildMode === STRUCTURES.SETTLEMENT
+                                            ? null
+                                            : STRUCTURES.SETTLEMENT
+                                    )
+                                }
                             >
                                 Build Settlement
                             </button>
 
                             <button
                                 disabled={!canBuildCity}
-                                onClick={() => setBuildMode("city")}
+                                onClick={() =>
+                                    setBuildMode(
+                                        buildMode === STRUCTURES.CITY
+                                            ? null
+                                            : STRUCTURES.CITY
+                                    )
+                                }
                             >
                                 Build City
+                            </button>
+
+                            <button
+                                onClick={() => setShowTradeCreation(true)}
+                            >
+                                Trade
                             </button>
 
                             <button disabled={!isMyTurn}>
