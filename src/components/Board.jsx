@@ -3,6 +3,11 @@ import HexTile from "./HexTile";
 import Vertex from "./Vertex";
 import Edge from "./Edge";
 import Port from "./Port";
+import {
+    SETUP_SUBPHASES,
+    GAMEPLAY_SUBPHASES,
+    GAME_PHASES
+} from "../constants/GameConstants";
 
 function Board({
     board,
@@ -14,10 +19,12 @@ function Board({
     diceRoll,
     onVertexClick,
     onEdgeClick,
+    onTileClick,
     boardScale,
     setBoardScale,
     boardPan,
-    setBoardPan
+    setBoardPan,
+    robberTileId
 }) {
     const HEX_SIZE = board.hexSize;
 
@@ -35,38 +42,38 @@ function Board({
     const translateY = padding - minY;
 
     const canPlaceSetupSettlement =
-        phase === "setup" &&
-        subphase === "placing_settlement" &&
+        phase === GAME_PHASES.SETUP &&
+        subphase === SETUP_SUBPHASES.PLACING_SETTLEMENT &&
         currentPlayerId === myPlayerId;
 
     const canPlaceGameplaySettlement =
         buildMode === "settlement" &&
-        phase === "gameplay" &&
-        subphase === "action" &&
+        phase === GAME_PHASES.GAMEPLAY &&
+        subphase === GAMEPLAY_SUBPHASES.ACTION &&
         currentPlayerId === myPlayerId;
 
     const canPlaceCity =
         buildMode === "city" &&
-        phase === "gameplay" &&
-        subphase === "action" &&
+        phase === GAME_PHASES.GAMEPLAY &&
+        subphase === GAMEPLAY_SUBPHASES.ACTION &&
         currentPlayerId === myPlayerId;
 
     const canPlaceRoad =
         (
-            phase === "setup" &&
-            subphase === "placing_road" &&
+            phase === GAME_PHASES.SETUP &&
+            subphase === SETUP_SUBPHASES.PLACING_ROAD &&
             currentPlayerId === myPlayerId
         ) ||
         (
-            phase === "gameplay" &&
-            subphase === "action" &&
+            phase === GAME_PHASES.GAMEPLAY &&
+            subphase === GAMEPLAY_SUBPHASES.ACTION &&
             buildMode === "road" &&
             currentPlayerId === myPlayerId
         );
 
     const canPlaceRobber =
-        // subphase === "placeRobber" &&
-        subphase === "placing_settlement" &&
+        phase === GAME_PHASES.GAMEPLAY &&
+        subphase === GAMEPLAY_SUBPHASES.ROBBER_PLACEMENT &&
         currentPlayerId === myPlayerId;
 
     const isDragging = useRef(false);
@@ -84,8 +91,6 @@ function Board({
         const svg = event.currentTarget;
         const rect = svg.getBoundingClientRect();
 
-        // Convert mouse position from screen pixels
-        // into SVG/viewBox coordinates.
         const mouseX =
             (event.clientX - rect.left) *
             (boardWidth / rect.width);
@@ -111,7 +116,6 @@ function Board({
             return;
         }
 
-        // Find the board point currently underneath the mouse.
         const boardPointX =
             (mouseX - boardPan.x - centerX) / boardScale +
             centerX;
@@ -120,8 +124,6 @@ function Board({
             (mouseY - boardPan.y - centerY) / boardScale +
             centerY;
 
-        // Keep that exact board point underneath the mouse
-        // after zooming.
         const newPanX =
             mouseX -
             (boardPointX - centerX) * newScale -
@@ -192,8 +194,6 @@ function Board({
         }
     }
 
-    console.log("PORTS:", board.ports);
-
     return (
         <svg
             width={boardWidth}
@@ -239,6 +239,8 @@ function Board({
                         diceRoll={diceRoll}
                         subphase={subphase}
                         canPlaceRobber={canPlaceRobber}
+                        robberTileId={robberTileId}
+                        onTileClick={onTileClick}
                     />
                 ))}
 
@@ -268,7 +270,7 @@ function Board({
                         players={board.players}
                         buildableSettlements={
                             canPlaceSetupSettlement ||
-                                canPlaceGameplaySettlement
+                            canPlaceGameplaySettlement
                                 ? board.buildableSettlements
                                 : []
                         }

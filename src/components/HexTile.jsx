@@ -15,8 +15,7 @@ import Robber from "./Robber";
 
 import { GAMEPLAY_SUBPHASES } from "../constants/GameConstants";
 
-import "./HexTile.css"
-// import "./Vertex.css"
+import "./HexTile.css";
 
 const TILE_BACKGROUNDS = {
     desert: desertBg,
@@ -35,7 +34,15 @@ const RESOURCE_ICONS = {
     wood: woodIcon
 };
 
-function HexTile({ tile, size, diceRoll, subphase, canPlaceRobber }) {
+function HexTile({
+    tile,
+    size,
+    diceRoll,
+    subphase,
+    canPlaceRobber,
+    robberTileId,
+    onTileClick
+}) {
     const iconYOffset = -0.6;
     const iconScale = 0.6;
 
@@ -74,12 +81,20 @@ function HexTile({ tile, size, diceRoll, subphase, canPlaceRobber }) {
 
     const bgColor =
         subphase === GAMEPLAY_SUBPHASES.ACTION &&
-            diceTotal === tile.numberToken
+        diceTotal === tile.numberToken
             ? "rgb(116, 226, 116)"
             : "#e8d5ad";
 
+    function handleTileClick() {
+        if (!canPlaceRobber) {
+            return;
+        }
+
+        onTileClick?.(tile.id);
+    }
+
     return (
-        <g>
+        <g onClick={handleTileClick}>
             <defs>
                 <clipPath id={`tile-clip-${tile.id}`}>
                     <polygon points={points} />
@@ -90,7 +105,7 @@ function HexTile({ tile, size, diceRoll, subphase, canPlaceRobber }) {
                 points={points}
                 fill="lightgray"
                 stroke="black"
-                stroke-width="10"
+                strokeWidth="10"
             />
 
             <image
@@ -136,14 +151,14 @@ function HexTile({ tile, size, diceRoll, subphase, canPlaceRobber }) {
                         y={
                             tile.y +
                             size * tokenYOffset +
-                            size * tokenScale / 2
-                            + (size * tokenScale * 0.05)
+                            size * tokenScale / 2 +
+                            (size * tokenScale * 0.05)
                         }
                         textAnchor="middle"
                         dominantBaseline="middle"
                         fill={
                             tile.numberToken === 6 ||
-                                tile.numberToken === 8
+                            tile.numberToken === 8
                                 ? "#d30000"
                                 : "black"
                         }
@@ -164,9 +179,9 @@ function HexTile({ tile, size, diceRoll, subphase, canPlaceRobber }) {
                 y={tile.y}
                 size={size}
                 // canPlace={canPlaceRobber}
-                canPlace={canPlaceRobber}
+                canPlace={canPlaceRobber && robberTileId !== tile.id}
+                visible={robberTileId === tile.id}
             />
-
         </g>
     );
 }

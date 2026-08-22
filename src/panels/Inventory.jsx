@@ -7,7 +7,7 @@ function Inventory({ player }) {
         return null;
     }
 
-    console.log("PLAYER PORTS:", player.ports);
+    // console.log("PLAYER PORTS:", player.ports);
 
     return (
         <div className="panel">

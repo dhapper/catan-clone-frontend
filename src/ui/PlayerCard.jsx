@@ -7,11 +7,10 @@ function PlayerCard({
 }) {
     return (
         <div
-            className={`player-card ${
-                player.connected
-                    ? "connected"
-                    : "disconnected"
-            }`}
+            className={`player-card ${player.connected
+                ? "connected"
+                : "disconnected"
+                }`}
         >
             <div
                 className="player-color"
@@ -33,7 +32,13 @@ function PlayerCard({
 
                 {phase === "gameplay" && (
                     <div className="player-stats">
-                        <span>VP: 1</span>
+                        <span>
+                            VP: {
+                                player.id === myPlayerId
+                                    ? `${player.victoryPoints} (${player.secretVictoryPoints})`
+                                    : player.victoryPoints - player.secretVictoryPoints
+                            }
+                        </span>
                         <span>R: 2</span>
                         <span>DC: 3</span>
                     </div>

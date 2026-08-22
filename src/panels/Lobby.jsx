@@ -1,5 +1,5 @@
 import { useState } from "react";
-import socket from "../socket";
+import socket from "../services/socket";
 import "./Lobby.css";
 import "./Panel.css";
 import PlayerCard from "../ui/PlayerCard";

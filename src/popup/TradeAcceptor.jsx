@@ -3,7 +3,7 @@ import "./Popup.css";
 import "./Trade.css";
 import "../panels/Panel.css";
 import ResourceToken from "../ui/ResourceToken";
-import socket from "../socket";
+import socket from "../services/socket";
 
 function TradeAcceptor({
     player,

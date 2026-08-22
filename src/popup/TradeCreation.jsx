@@ -3,7 +3,7 @@ import "./TradeCreation.css";
 import "./Popup.css";
 import "../panels/Panel.css";
 import ResourceSelector from "../ui/ResourceSelector";
-import socket from "../socket";
+import socket from "../services/socket";
 
 const EMPTY_RESOURCES = {
     wood: 0,

@@ -2,7 +2,7 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { getGame, buildSettlement, buildRoad, buildCity } from "./api/gameApi";
 import { SETUP_SUBPHASES, GAME_PHASES, GAMEPLAY_SUBPHASES } from "./constants/GameConstants";
-import socket from "./socket";
+import socket from "./services/socket";
 import Board from "./components/Board";
 import Lobby from "./panels/Lobby";
 import Players from "./panels/Players";
@@ -13,6 +13,7 @@ import TradeCreation from "./popup/TradeCreation"
 import TradeProposal from "./popup/TradeProposal";
 import TradeAcceptor from "./popup/TradeAcceptor";
 import Discard from "./popup/Discard";
+import RobberSteal from "./popup/RobberSteal";
 
 function App() {
     const [board, setBoard] = useState(null);
@@ -29,6 +30,9 @@ function App() {
     const [buildAvailability, setBuildAvailability] = useState(null);
     const [currentTrade, setCurrentTrade] = useState(null);
     const [showTradeCreation, setShowTradeCreation] = useState(false);
+    const [discardRequirements, setDiscardRequirements] = useState({});
+    const [robberTileId, setRobberTileId] = useState(null);
+    const [robberVictims, setRobberVictims] = useState([]);
 
     const [boardScale, setBoardScale] = useState(1);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
@@ -53,6 +57,9 @@ function App() {
             setBank(data.bank);
             setBuildAvailability(data.buildAvailability);
             setCurrentTrade(data.currentTrade);
+            setDiscardRequirements(data.discardRequirements ?? {});
+            setRobberTileId(data.robberTileId);
+            setRobberVictims(data.robberVictims ?? []);
 
             getGame()
                 .then((data) => {
@@ -157,6 +164,22 @@ function App() {
         }
     }
 
+    function handleTileClick(tileId) {
+        if (
+            phase !== GAME_PHASES.GAMEPLAY ||
+            subphase !== GAMEPLAY_SUBPHASES.ROBBER_PLACEMENT ||
+            currentPlayerId !== myPlayerId
+        ) {
+            return;
+        }
+
+        console.log("ROBBER TILE CLICKED:", tileId);
+
+        socket.emit("game:moveRobber", {
+            tileId
+        });
+    }
+
     const myPlayer = players.find(
         player => player.id === myPlayerId
     );
@@ -172,6 +195,16 @@ function App() {
     if (!board) {
         return <div>Loading game...</div>;
     }
+
+    console.log(
+        "DISCARD DEBUG:",
+        {
+            phase,
+            subphase,
+            myPlayerId,
+            discardRequirement: discardRequirements[myPlayerId]
+        }
+    );
 
     return (
         <div className="game-layout">
@@ -229,13 +262,24 @@ function App() {
 
             </div>
 
-            {/* <Discard
-                player={players.find(
-                    player => player.id === myPlayerId
+            {phase === GAME_PHASES.GAMEPLAY &&
+                subphase === GAMEPLAY_SUBPHASES.DISCARDING &&
+                discardRequirements[myPlayerId] && (
+                    <Discard
+                        player={myPlayer}
+                        discardAmount={discardRequirements[myPlayerId]}
+                    />
                 )}
-                discardAmount={3}
-            />*/}
 
+            {phase === GAME_PHASES.GAMEPLAY &&
+                subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                currentPlayerId === myPlayerId &&
+                robberVictims.length > 1 && (
+                    <RobberSteal
+                        players={players}
+                        robberVictims={robberVictims}
+                    />
+                )}
 
             {phase === GAME_PHASES.GAMEPLAY &&
                 subphase === GAMEPLAY_SUBPHASES.ACTION &&
@@ -279,10 +323,12 @@ function App() {
                     diceRoll={diceRoll}
                     onVertexClick={handleVertexClick}
                     onEdgeClick={handleEdgeClick}
+                    onTileClick={handleTileClick}
                     boardScale={boardScale}
                     setBoardScale={setBoardScale}
                     boardPan={boardPan}
                     setBoardPan={setBoardPan}
+                    robberTileId={robberTileId}
                 />
             </div>
 

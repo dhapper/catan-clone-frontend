@@ -1,6 +1,6 @@
 import "./Actions.css";
 import { GAMEPLAY_SUBPHASES } from "../constants/GameConstants";
-import socket from "../socket";
+import socket from "../services/socket";
 import { STRUCTURES } from "../constants/GameConstants";
 
 function Actions({
@@ -45,11 +45,6 @@ function Actions({
         <div className="panel actions">
             <p>Actions</p>
 
-            {/* <p>
-                {isMyTurn
-                    ? "Your turn"
-                    : "Waiting for your turn"}
-            </p> */}
 
             {/* Production phase */}
             {isProductionPhase && (
@@ -67,6 +62,18 @@ function Actions({
                             Waiting for current player to roll dice...
                         </p>
                     )}
+                </>
+            )}
+
+            {subphase === GAMEPLAY_SUBPHASES.DISCARDING && (
+                <>
+                    {diceRoll && (
+                        <p>
+                            Dice Roll: {diceRoll[0]} + {diceRoll[1]}
+                        </p>
+                    )}
+
+                    <p>Waiting for players to discard...</p>
                 </>
             )}
 

@@ -4,8 +4,19 @@ function Robber({
     x,
     y,
     size,
-    canPlace
+    canPlace,
+    visible,
+    onClick
 }) {
+
+    // if (visible) {
+    //     console.log("VISIBLE ROBBER:", {
+    //         visible,
+    //         x,
+    //         y
+    //     });
+    // }
+
     return (
         <g>
             {canPlace && (
@@ -15,14 +26,10 @@ function Robber({
                     cy={y}
                     r={size / 6}
                     fill="white"
+                    onClick={onClick}
                 />
             )}
 
-            {/*
-                Temporary robber rendering.
-                Eventually this can be controlled by the tile's
-                robber state from the backend.
-            */}
             <defs>
                 <filter
                     id={`robber-outline-${x}-${y}`}
@@ -65,19 +72,21 @@ function Robber({
                 </filter>
             </defs>
 
-            <image
-                href={robberIcon}
-                x={x + size * 0.25}
-                y={y - size * 0.25}
-                width={size * 0.5}
-                height={size * 0.5}
-                preserveAspectRatio="xMidYMid meet"
-                filter={`url(#robber-outline-${x}-${y})`}
-                style={{
-                    pointerEvents: "none",
-                    userSelect: "none"
-                }}
-            />
+            {visible && (
+                <image
+                    href={robberIcon}
+                    x={x + size * 0.25}
+                    y={y - size * 0.25}
+                    width={size * 0.5}
+                    height={size * 0.5}
+                    preserveAspectRatio="xMidYMid meet"
+                    filter={`url(#robber-outline-${x}-${y})`}
+                    style={{
+                        pointerEvents: "none",
+                        userSelect: "none"
+                    }}
+                />
+            )}
         </g>
     );
 }

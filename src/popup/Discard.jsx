@@ -3,6 +3,7 @@ import "./TradeCreation.css";
 import "./Popup.css";
 import "../panels/Panel.css";
 import ResourceSelector from "../ui/ResourceSelector";
+import socket from "../services/socket";
 
 const EMPTY_RESOURCES = {
     wood: 0,
@@ -15,6 +16,25 @@ const EMPTY_RESOURCES = {
 function Discard({ player, discardAmount }) {
     const [discardedResources, setDiscardedResources] =
         useState({ ...EMPTY_RESOURCES });
+
+    const selectedAmount =
+        Object.values(discardedResources).reduce(
+            (total, amount) => total + amount,
+            0
+        );
+
+    const canDiscard =
+        selectedAmount === discardAmount;
+
+    function handleDiscard() {
+        if (!canDiscard) {
+            return;
+        }
+
+        socket.emit("game:discardResources", {
+            resources: discardedResources
+        });
+    }
 
     return (
         <div className="popup panel">
@@ -32,9 +52,12 @@ function Discard({ player, discardAmount }) {
                 onChange={setDiscardedResources}
             />
 
-            <div className="tradeButtons">
-                <button>Discard</button>
-            </div>
+            <button
+                onClick={handleDiscard}
+                disabled={!canDiscard}
+            >
+                Discard
+            </button>
         </div>
     );
 }

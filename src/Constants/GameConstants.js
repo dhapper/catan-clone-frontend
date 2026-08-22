@@ -12,7 +12,9 @@ export const SETUP_SUBPHASES = Object.freeze({
 
 export const GAMEPLAY_SUBPHASES = Object.freeze({
     PRODUCTION: "production",
-    ACTION: "action"
+    ACTION: "action",
+    DISCARDING: "discarding",
+    ROBBER_PLACEMENT: "robber_placement"
 });
 
 export const STRUCTURES = Object.freeze({
