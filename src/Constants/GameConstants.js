@@ -22,3 +22,8 @@ export const STRUCTURES = Object.freeze({
     SETTLEMENT: "settlement",
     CITY: "city"
 });
+
+export const SPECIAL_VICTORY_POINTS = Object.freeze({
+    LARGEST_ARMY: "largest_army",
+    LONGEST_ROAD: "longest_road"
+});

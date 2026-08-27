@@ -1,0 +1,18 @@
+.special-victory-badge {
+    width: 60px;
+    height: 60px;
+    background-color: rgb(66, 30, 148);
+    border: 3px solid white;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.special-victory-badge img {
+    width: 70%;
+    height: 70%;
+
+    filter: brightness(0) invert(1);
+}

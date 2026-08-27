@@ -16,3 +16,13 @@
     width: min-content;
     height: min-content;
 } */
+
+.inventory-special-victory {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 8px;
+
+    margin-top: 10px;
+}

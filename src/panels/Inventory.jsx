@@ -1,6 +1,7 @@
 import "./Inventory.css";
 import ResourceToken from "../ui/ResourceToken";
 import PortBadge from "../ui/PortBadge";
+import SpecialVictoryPointBadge from "../ui/SpecialVictoryPointBadge";
 
 function Inventory({ player }) {
     if (!player) {
@@ -59,6 +60,11 @@ function Inventory({ player }) {
                         </svg>
                     </div>
                 ))}
+            </div>
+
+            <div className="inventory-special-victory">
+                <SpecialVictoryPointBadge type="largest_army" />
+                <SpecialVictoryPointBadge type="longest_road" />
             </div>
         </div>
     );
