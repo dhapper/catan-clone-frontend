@@ -28,11 +28,21 @@ const RESOURCE_BACKGROUNDS = {
     wood: forestBg
 };
 
+const RESOURCE_COLORS = {
+    brick: '#8a3e3e',
+    ore: '#5c4a4a',
+    wheat: '#97743e',
+    sheep: '#668128',
+    wood: '#355e3d',
+};
+
 function ResourceToken({
     resource,
     amount,
     hideIfZero = false,
-    hideAmount = false
+    hideAmount = false,
+    onClick = null,
+    hoverable = false
 }) {
     if (hideIfZero && amount === 0) {
         return null;
@@ -40,18 +50,24 @@ function ResourceToken({
 
     const icon = RESOURCE_ICONS[resource];
     const background = RESOURCE_BACKGROUNDS[resource];
+    const color = RESOURCE_COLORS[resource];
 
     const isEmpty =
         amount === 0 &&
         !hideAmount;
 
     return (
+
         <div
             className={`resource-token ${isEmpty ? "resource-token-empty" : ""
+                } ${hoverable ? "resource-token-hoverable" : ""
+                } ${onClick ? "resource-token-clickable" : ""
                 }`}
             style={{
-                backgroundImage: `url(${background})`
+                // backgroundImage: `url(${background})`
+                backgroundColor: color
             }}
+            onClick={onClick}
         >
             <img src={icon} alt={resource} />
 

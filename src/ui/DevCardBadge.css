@@ -1,0 +1,38 @@
+.dev-card-badge {
+    width: 40px;
+    height: 60px;
+    flex-shrink: 0;
+
+    background-color: rgb(252, 20, 175);
+    border: 3px solid white;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dev-card-badge img {
+    width: 70%;
+    height: 70%;
+
+    filter: brightness(0) invert(1);
+}
+
+.dev-card-badge.dev-card-disabled {
+    border-color: grey;
+}
+
+.dev-card-badge.dev-card-disabled img {
+    filter: brightness(0) invert(65%);
+}
+
+.dev-card-playable {
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.dev-card-playable:hover {
+    transform: scale(1.08);
+    background-color: green;
+}

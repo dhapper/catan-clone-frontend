@@ -26,3 +26,13 @@
 
     margin-top: 10px;
 }
+
+.inventory-dev-cards {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}

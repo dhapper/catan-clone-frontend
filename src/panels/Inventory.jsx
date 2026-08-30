@@ -2,8 +2,15 @@ import "./Inventory.css";
 import ResourceToken from "../ui/ResourceToken";
 import PortBadge from "../ui/PortBadge";
 import SpecialVictoryPointBadge from "../ui/SpecialVictoryPointBadge";
+import DevCardBadge from "../ui/DevCardBadge";
+import { GAMEPLAY_SUBPHASES } from "../constants/GameConstants";
 
-function Inventory({ player }) {
+function Inventory({
+    player,
+    currentPlayerId,
+    subphase,
+    onDevCardPlay
+}) {
     if (!player) {
         return null;
     }
@@ -59,6 +66,21 @@ function Inventory({ player }) {
                             </g>
                         </svg>
                     </div>
+                ))}
+            </div>
+
+            <div className="inventory-dev-cards">
+                {player.devCards?.map((card, index) => (
+                    <DevCardBadge
+                        key={`${card.type}-${index}`}
+                        card={card}
+                        isMyTurn={player.id === currentPlayerId}
+                        isActionPhase={
+                            subphase === GAMEPLAY_SUBPHASES.ACTION
+                        }
+                        devCardPlayed={player.devCardPlayed}
+                        onDevCardPlay={onDevCardPlay}
+                    />
                 ))}
             </div>
 

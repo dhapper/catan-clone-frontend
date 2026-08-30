@@ -26,20 +26,28 @@ function Actions({
     const isActionPhase =
         subphase === GAMEPLAY_SUBPHASES.ACTION;
 
+    const isRoadBuildingDevCardActive =
+        isMyTurn &&
+        isActionPhase &&
+        player?.roadBuildingRemaining > 0;
+
     const canBuildRoad =
         isMyTurn &&
         buildAvailability?.road &&
-        buildableRoads?.length > 0;
+        buildableRoads?.length > 0 &&
+        !isRoadBuildingDevCardActive;
 
     const canBuildSettlement =
         isMyTurn &&
         buildAvailability?.settlement &&
-        buildableSettlements?.length > 0;
+        buildableSettlements?.length > 0 &&
+        !isRoadBuildingDevCardActive;
 
     const canBuildCity =
         isMyTurn &&
         buildAvailability?.city &&
-        buildableCities?.length > 0;
+        buildableCities?.length > 0 &&
+        !isRoadBuildingDevCardActive;
 
     return (
         <div className="panel actions">
@@ -128,17 +136,23 @@ function Actions({
                             </button>
 
                             <button
+                                disabled={isRoadBuildingDevCardActive}
                                 onClick={() => setShowTradeCreation(true)}
                             >
                                 Trade
                             </button>
 
-                            <button disabled={!isMyTurn}>
+                            <button
+                                disabled={isRoadBuildingDevCardActive}
+                                onClick={() => {
+                                    socket.emit("game:buyDevCard");
+                                }}
+                            >
                                 Buy Development Card
                             </button>
 
                             <button
-                                disabled={!isMyTurn}
+                                disabled={isRoadBuildingDevCardActive}
                                 onClick={() => {
                                     socket.emit("game:endTurn");
                                 }}

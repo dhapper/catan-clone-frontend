@@ -50,3 +50,13 @@
 .resource-token-badge-empty {
     border: 3px solid grey
 }
+
+.resource-token-hoverable {
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.resource-token-hoverable:hover {
+    transform: scale(1.1);
+    background-color: rgb(0, 160, 0) !important;
+}

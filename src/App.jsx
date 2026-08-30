@@ -14,6 +14,7 @@ import TradeProposal from "./popup/TradeProposal";
 import TradeAcceptor from "./popup/TradeAcceptor";
 import Discard from "./popup/Discard";
 import RobberSteal from "./popup/RobberSteal";
+import Monopoly from "./popup/Monopoly";
 
 function App() {
     const [board, setBoard] = useState(null);
@@ -33,9 +34,12 @@ function App() {
     const [discardRequirements, setDiscardRequirements] = useState({});
     const [robberTileId, setRobberTileId] = useState(null);
     const [robberVictims, setRobberVictims] = useState([]);
+    const [showMonopoly, setShowMonopoly] = useState(false);
 
     const [boardScale, setBoardScale] = useState(1);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
+
+    const myPlayer = players.find(player => player.id === myPlayerId);
 
     useEffect(() => {
         console.log("Setting up players:update listener");
@@ -96,6 +100,27 @@ function App() {
         setShowTradeCreation(false);
     }, [currentPlayerId]);
 
+    // for road building dev card, dont completely understand
+    useEffect(() => {
+        if (
+            phase !== GAME_PHASES.GAMEPLAY ||
+            subphase !== GAMEPLAY_SUBPHASES.ACTION ||
+            currentPlayerId !== myPlayerId
+        ) {
+            return;
+        }
+
+        if (myPlayer?.roadBuildingRemaining > 0) {
+            setBuildMode("road");
+        }
+    }, [
+        phase,
+        subphase,
+        currentPlayerId,
+        myPlayerId,
+        myPlayer?.roadBuildingRemaining
+    ]);
+
     async function handleVertexClick(vertexId) {
         console.log("VERTEX CLICKED:", vertexId);
 
@@ -135,8 +160,6 @@ function App() {
         try {
             await buildRoad(edgeId);
 
-            setBuildMode(null);
-
             const updatedGame = await getGame();
             setBoard(updatedGame);
 
@@ -144,10 +167,18 @@ function App() {
                 player => player.id === myPlayerId
             );
 
+            if (!currentPlayer?.roadBuildingRemaining) {
+                setBuildMode(null);
+            }
+
             if (currentPlayer) {
                 setBuildAvailability({
-                    road: currentPlayer.resources.wood >= 1 &&
-                        currentPlayer.resources.brick >= 1,
+                    road:
+                        currentPlayer.roadBuildingRemaining > 0 ||
+                        (
+                            currentPlayer.resources.wood >= 1 &&
+                            currentPlayer.resources.brick >= 1
+                        ),
                     settlement: currentPlayer.resources.wood >= 1 &&
                         currentPlayer.resources.brick >= 1 &&
                         currentPlayer.resources.wheat >= 1 &&
@@ -179,10 +210,6 @@ function App() {
             tileId
         });
     }
-
-    const myPlayer = players.find(
-        player => player.id === myPlayerId
-    );
 
     function recenterBoard() {
         setBoardPan({ x: 0, y: 0 });
@@ -237,6 +264,13 @@ function App() {
                         player={players.find(
                             player => player.id === myPlayerId
                         )}
+                        currentPlayerId={currentPlayerId}
+                        subphase={subphase}
+                        onDevCardPlay={(cardType) => {
+                            if (cardType === "monopoly") {
+                                setShowMonopoly(true);
+                            }
+                        }}
                     />
                 )}
 
@@ -261,6 +295,20 @@ function App() {
                 )}
 
             </div>
+
+            {/* pop ups */}
+
+            {phase === GAME_PHASES.GAMEPLAY &&
+                subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                currentPlayerId === myPlayerId &&
+                showMonopoly && (
+                    <Monopoly
+                        onResourceSelect={(resource) => {
+                            console.log("MONOPOLY RESOURCE SELECTED:", resource);
+                            setShowMonopoly(false);
+                        }}
+                    />
+                )}
 
             {phase === GAME_PHASES.GAMEPLAY &&
                 subphase === GAMEPLAY_SUBPHASES.DISCARDING &&
