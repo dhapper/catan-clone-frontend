@@ -34,9 +34,10 @@ function PlayerCard({
                     <div className="player-stats">
                         <span>
                             VP: {
-                                player.id === myPlayerId
-                                    ? `${player.victoryPoints} (${player.secretVictoryPoints})`
-                                    : player.victoryPoints - player.secretVictoryPoints
+                                player.id === myPlayerId &&
+                                    player.secretVictoryPoints > 0
+                                    ? `${player.victoryPoints} (${player.victoryPoints + player.secretVictoryPoints})`
+                                    : player.victoryPoints
                             }
                         </span>
                         <span>R: 2</span>

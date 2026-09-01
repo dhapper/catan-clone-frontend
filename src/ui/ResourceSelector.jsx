@@ -7,14 +7,19 @@ function ResourceSelector({
     selectedResources,
     onChange,
     reversed = false,
-    infiniteRes = false
+    infiniteRes = false,
+    resources = null,
+    disableIncrease = false
 }) {
+    const availableResources =
+        resources ?? player?.resources ?? {};
+
     function changeAmount(resource, change) {
         const currentAmount =
             selectedResources?.[resource] ?? 0;
 
-        const playerAmount =
-            player?.resources?.[resource] ?? 0;
+        const availableAmount =
+            availableResources?.[resource] ?? 0;
 
         let newAmount = currentAmount + change;
 
@@ -22,8 +27,8 @@ function ResourceSelector({
             newAmount = 0;
         }
 
-        if (!infiniteRes && newAmount > playerAmount) {
-            newAmount = playerAmount;
+        if (!infiniteRes && newAmount > availableAmount) {
+            newAmount = availableAmount;
         }
 
         onChange({
@@ -33,19 +38,19 @@ function ResourceSelector({
     }
 
     function renderResourceSection(resource) {
-        const playerAmount =
-            player?.resources?.[resource] ?? 0;
+        const availableAmount =
+            availableResources?.[resource] ?? 0;
 
         const selectedAmount =
             selectedResources?.[resource] ?? 0;
 
-        const playerToken = (
+        const resourceToken = (
             <ResourceToken
                 resource={resource}
                 amount={
                     infiniteRes
-                        ? playerAmount
-                        : playerAmount - selectedAmount
+                        ? availableAmount
+                        : availableAmount - selectedAmount
                 }
                 hideAmount={infiniteRes}
             />
@@ -63,8 +68,11 @@ function ResourceSelector({
                 <button
                     onClick={() => changeAmount(resource, 1)}
                     disabled={
-                        !infiniteRes &&
-                        selectedAmount >= playerAmount
+                        disableIncrease ||
+                        (
+                            !infiniteRes &&
+                            selectedAmount >= availableAmount
+                        )
                     }
                 >
                     +
@@ -83,16 +91,13 @@ function ResourceSelector({
             <div className="resourceSection" key={resource}>
 
                 {reversed && selectedToken}
-
                 {reversed && quantityButtons}
 
-                {!reversed && playerToken}
-
+                {!reversed && resourceToken}
                 {!reversed && quantityButtons}
-
                 {!reversed && selectedToken}
 
-                {reversed && playerToken}
+                {reversed && resourceToken}
 
             </div>
         );

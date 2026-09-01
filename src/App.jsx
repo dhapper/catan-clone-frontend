@@ -15,6 +15,7 @@ import TradeAcceptor from "./popup/TradeAcceptor";
 import Discard from "./popup/Discard";
 import RobberSteal from "./popup/RobberSteal";
 import Monopoly from "./popup/Monopoly";
+import Invention from "./popup/Invention";
 
 function App() {
     const [board, setBoard] = useState(null);
@@ -35,6 +36,7 @@ function App() {
     const [robberTileId, setRobberTileId] = useState(null);
     const [robberVictims, setRobberVictims] = useState([]);
     const [showMonopoly, setShowMonopoly] = useState(false);
+    const [showInvention, setShowInvention] = useState(false);
 
     const [boardScale, setBoardScale] = useState(1);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
@@ -270,6 +272,11 @@ function App() {
                             if (cardType === "monopoly") {
                                 setShowMonopoly(true);
                             }
+
+                            if (cardType === "invention") {
+                                socket.emit("game:playInvention");
+                                setShowInvention(true);
+                            }
                         }}
                     />
                 )}
@@ -297,6 +304,16 @@ function App() {
             </div>
 
             {/* pop ups */}
+
+            {phase === GAME_PHASES.GAMEPLAY &&
+                subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                currentPlayerId === myPlayerId &&
+                showInvention && (
+                    <Invention
+                        bank={bank}
+                        setShowInvention={setShowInvention}
+                    />
+                )}
 
             {phase === GAME_PHASES.GAMEPLAY &&
                 subphase === GAMEPLAY_SUBPHASES.ACTION &&

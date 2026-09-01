@@ -60,6 +60,10 @@ function DevCardBadge({
         if (card.type === "monopoly") {
             onDevCardPlay("monopoly");
         }
+
+        if (card.type === "invention") {
+            onDevCardPlay("invention");
+        }
     };
 
     return (
