@@ -9,7 +9,8 @@ function Players({
     myPlayerId,
     phase,
     subphase,
-    turnOrderRolls
+    turnOrderRolls,
+    currentPlayerId
 }) {
 
     const sortedPlayers = [...players].sort((a, b) => {
@@ -68,6 +69,7 @@ function Players({
                             player={player}
                             myPlayerId={myPlayerId}
                             phase={phase}
+                            currentPlayerId={currentPlayerId}
                         />
 
                         {phase === GAME_PHASES.SETUP && (
@@ -101,18 +103,20 @@ function Players({
                 ))}
             </div>
 
-            <div className="player-list">
-                {sortedPlayers.map(player => (
-                    !player.connected && !myPlayerId && (
-                        <button
-                            key={player.id}
-                            onClick={() => claimPlayer(player.id)}
-                        >
-                            Play as {player.name}
-                        </button>
-                    )
-                ))}
-            </div>
+            {sortedPlayers.some(player => !player.connected) && !myPlayerId && (
+                <div className="player-list">
+                    {sortedPlayers.map(player => (
+                        !player.connected && (
+                            <button
+                                key={player.id}
+                                onClick={() => claimPlayer(player.id)}
+                            >
+                                Play as {player.name}
+                            </button>
+                        )
+                    ))}
+                </div>
+            )}
 
             {phase === GAME_PHASES.SETUP && (
                 <p>*Ties are decided by join order</p>

@@ -1,6 +1,7 @@
 .game-layout {
     --left-width: max(25vw, 300px);
-    --right-width: max(20vw, 200px);
+    /* --right-width: max(20vw, 200px); */
+    --right-width: max(0vw, 0px);
 
     display: grid;
     grid-template-columns:
@@ -77,4 +78,17 @@
         width: var(--right-width);
         height: 100%;
     }
+}
+
+button {
+    background-color: lightblue;
+    border: 3px solid black;
+    border-radius: 8px;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+    margin: 8px;
+}
+
+button:hover {
+    background-color: rgb(118, 216, 118);
+    transform: scale(1.1);
 }

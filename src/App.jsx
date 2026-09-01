@@ -37,6 +37,11 @@ function App() {
     const [robberVictims, setRobberVictims] = useState([]);
     const [showMonopoly, setShowMonopoly] = useState(false);
     const [showInvention, setShowInvention] = useState(false);
+    const [robberSafetyNumber, setRobberSafetyNumber] = useState(null);
+    const [bankResourceCount, setBankResourceCount] = useState(null);
+    const [victoryPointsNeeded, setVictoryPointsNeeded] = useState(null);
+    const [newBoardLayout, setNewBoardLayout] = useState("");
+    const [winner, setWinner] = useState(null);
 
     const [boardScale, setBoardScale] = useState(1);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
@@ -66,6 +71,11 @@ function App() {
             setDiscardRequirements(data.discardRequirements ?? {});
             setRobberTileId(data.robberTileId);
             setRobberVictims(data.robberVictims ?? []);
+            setRobberSafetyNumber(data.robberSafetyNumber);
+            setBankResourceCount(data.bankResourceCount);
+            setVictoryPointsNeeded(data.victoryPointsNeeded);
+            setNewBoardLayout(data.boardLayout);
+            setWinner(data.winner);
 
             getGame()
                 .then((data) => {
@@ -240,12 +250,23 @@ function App() {
 
             <div className="game-left">
 
+                {phase != GAME_PHASES.LOBBY &&
+                    myPlayer?.isHost && (
+                        <button onClick={() => socket.emit("game:reset")}>
+                            Back to lobby
+                        </button>
+                    )}
+
                 {phase === GAME_PHASES.LOBBY && (
                     <Lobby
                         players={players}
                         colors={colors}
                         myPlayerId={myPlayerId}
                         phase={phase}
+                        robberSafetyNumber={robberSafetyNumber}
+                        bankResourceCount={bankResourceCount}
+                        victoryPointsNeeded={victoryPointsNeeded}
+                        boardLayout={newBoardLayout}
                     />
                 )}
 
@@ -256,6 +277,7 @@ function App() {
                         phase={phase}
                         subphase={subphase}
                         turnOrderRolls={turnOrderRolls}
+                        currentPlayerId={currentPlayerId}
                     />
                 )}
 
@@ -304,6 +326,13 @@ function App() {
             </div>
 
             {/* pop ups */}
+
+            {winner && (
+                <GameOver
+                    winner={winner}
+                    players={players}
+                />
+            )}
 
             {phase === GAME_PHASES.GAMEPLAY &&
                 subphase === GAMEPLAY_SUBPHASES.ACTION &&
@@ -397,7 +426,7 @@ function App() {
                 />
             </div>
 
-            <div className="game-right">
+            {/* <div className="game-right">
 
                 <div className="panel">
                     <button onClick={recenterBoard}>
@@ -409,8 +438,6 @@ function App() {
                     </button>
                 </div>
 
-                {/* Game logs will go here */}
-
                 <div className="panel">
                     <h1>Hexland</h1>
 
@@ -418,7 +445,7 @@ function App() {
                     <p>subphase: {subphase}</p>
                     <p>Player turn: {currentPlayerId}</p>
                 </div>
-            </div>
+            </div> */}
 
         </div>
     );

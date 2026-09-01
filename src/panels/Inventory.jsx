@@ -84,10 +84,17 @@ function Inventory({
                 ))}
             </div>
 
-            <div className="inventory-special-victory">
-                <SpecialVictoryPointBadge type="largest_army" />
-                <SpecialVictoryPointBadge type="longest_road" />
-            </div>
+            {(player.hasLargestArmy || player.hasLongestRoad) && (
+                <div className="inventory-special-victory">
+                    {player.hasLargestArmy && (
+                        <SpecialVictoryPointBadge type="largest_army" />
+                    )}
+
+                    {player.hasLongestRoad && (
+                        <SpecialVictoryPointBadge type="longest_road" />
+                    )}
+                </div>
+            )}
         </div>
     );
 }
