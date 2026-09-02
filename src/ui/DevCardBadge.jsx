@@ -1,5 +1,10 @@
 import "./DevCardBadge.css";
 import socket from "../services/socket";
+import knightIcon from "../assets/icons/other/knight.svg";
+import inventorIcon from "../assets/icons/other/inventor.svg";
+import monopolyIcon from "../assets/icons/other/monopoly.svg";
+import roadIcon from "../assets/icons/other/road.svg";
+import victoryPointIcon from "../assets/icons/other/victory-point.svg";
 
 function DevCardBadge({
     card,
@@ -9,11 +14,11 @@ function DevCardBadge({
     onDevCardPlay
 }) {
     const icons = {
-        knight: "/src/assets/icons/other/knight.svg",
-        invention: "/src/assets/icons/other/inventor.svg",
-        monopoly: "/src/assets/icons/other/monopoly.svg",
-        road_building: "/src/assets/icons/other/road.svg",
-        victory_point: "/src/assets/icons/other/victory-point.svg"
+        knight: knightIcon,
+        invention: inventorIcon,
+        monopoly: monopolyIcon,
+        road_building: roadIcon,
+        victory_point: victoryPointIcon
     };
 
     const icon = icons[card.type];

@@ -10,7 +10,8 @@ function Players({
     phase,
     subphase,
     turnOrderRolls,
-    currentPlayerId
+    currentPlayerId,
+    setupTurnOrder
 }) {
 
     const sortedPlayers = [...players].sort((a, b) => {
@@ -45,10 +46,10 @@ function Players({
             );
         }
 
-        return (
-            Number(a.id.slice(1)) -
-            Number(b.id.slice(1))
-        );
+        const aIndex = setupTurnOrder.indexOf(a.id);
+        const bIndex = setupTurnOrder.indexOf(b.id);
+
+        return aIndex - bIndex;
     });
 
     function claimPlayer(playerId) {
@@ -77,7 +78,7 @@ function Players({
                                 {(turnOrderRolls[player.id] || []).map(
                                     (roll, index) => (
                                         <div
-                                            className="turn-order-roll"
+                                            className="dice"
                                             key={index}
                                         >
                                             {roll}
@@ -121,6 +122,8 @@ function Players({
             {phase === GAME_PHASES.SETUP && (
                 <p>*Ties are decided by join order</p>
             )}
+
+            <div>hello</div>
         </div>
     );
 }

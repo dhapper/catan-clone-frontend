@@ -1,5 +1,6 @@
 import "./Vertex.css";
 import { SETUP_SUBPHASES } from "../constants/GameConstants";
+import { playSound } from "../services/soundManager";
 
 function Vertex({
     vertex,
@@ -49,12 +50,37 @@ function Vertex({
 
     const buildingType = vertex.building?.type;
 
+    function getContrastColor(color) {
+        if (color.startsWith("#")) {
+            const r = parseInt(color.slice(1, 3), 16);
+            const g = parseInt(color.slice(3, 5), 16);
+            const b = parseInt(color.slice(5, 7), 16);
+
+            const brightness =
+                (r * 299 + g * 587 + b * 114) / 1000;
+
+            return brightness > 128 ? "black" : "white";
+        }
+
+        const lightColors = [
+            "yellow",
+            "skyblue"
+        ];
+
+        return lightColors.includes(color)
+            ? "black"
+            : "white";
+    }
+
+    const starColor = getContrastColor(fill);
+
     return (
         <g
             className={isBuildable ? "vertex-buildable" : "vertex-existing"}
             onClick={() => {
                 if (isBuildable) {
                     onVertexClick(vertex.id);
+                    playSound("place");
                 }
             }}
         >
@@ -62,7 +88,7 @@ function Vertex({
                 className="vertex"
                 cx={vertex.x}
                 cy={vertex.y}
-                r={radius}
+                r={buildingType === "city" ? radius * 1.4 : radius}
                 style={{
                     "--hover-radius": radius * 1.2
                 }}
@@ -76,6 +102,7 @@ function Vertex({
                     textAnchor="middle"
                     dominantBaseline="central"
                     className="city-star"
+                    fill={starColor}
                 >
                     ★
                 </text>

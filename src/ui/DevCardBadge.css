@@ -3,7 +3,7 @@
     height: 60px;
     flex-shrink: 0;
 
-    background-color: rgb(252, 20, 175);
+    background-color: rgb(199, 114, 35);
     border: 3px solid white;
     border-radius: 8px;
 
@@ -24,7 +24,7 @@
 }
 
 .dev-card-badge.dev-card-disabled img {
-    filter: brightness(0) invert(65%);
+    filter: brightness(0) invert(75%);
 }
 
 .dev-card-playable {
@@ -34,5 +34,5 @@
 
 .dev-card-playable:hover {
     transform: scale(1.08);
-    background-color: green;
+    background-color: rgb(96, 211, 96);
 }

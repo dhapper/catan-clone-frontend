@@ -42,6 +42,7 @@ function App() {
     const [victoryPointsNeeded, setVictoryPointsNeeded] = useState(null);
     const [newBoardLayout, setNewBoardLayout] = useState("");
     const [winner, setWinner] = useState(null);
+    const [setupTurnOrder, setSetupTurnOrder] = useState([]);   // roll order
 
     const [boardScale, setBoardScale] = useState(1);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
@@ -76,6 +77,7 @@ function App() {
             setVictoryPointsNeeded(data.victoryPointsNeeded);
             setNewBoardLayout(data.boardLayout);
             setWinner(data.winner);
+            setSetupTurnOrder(data.setupTurnOrder ?? []);
 
             getGame()
                 .then((data) => {
@@ -278,6 +280,7 @@ function App() {
                         subphase={subphase}
                         turnOrderRolls={turnOrderRolls}
                         currentPlayerId={currentPlayerId}
+                        setupTurnOrder={setupTurnOrder}
                     />
                 )}
 

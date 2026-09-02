@@ -20,8 +20,16 @@
 }
 
 .city-star {
-    fill: white;
-    font-size: 28px;
+    /* fill: white; */
+    font-size: 40px;
     font-weight: bold;
     pointer-events: none;
+}
+
+.city {
+
+}
+
+.settlement {
+
 }

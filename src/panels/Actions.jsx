@@ -2,6 +2,7 @@ import "./Actions.css";
 import { GAMEPLAY_SUBPHASES } from "../constants/GameConstants";
 import socket from "../services/socket";
 import { STRUCTURES } from "../constants/GameConstants";
+import { playSound } from "../services/soundManager";
 
 function Actions({
     myPlayerId,
@@ -49,6 +50,11 @@ function Actions({
         buildableCities?.length > 0 &&
         !isRoadBuildingDevCardActive;
 
+    const canBuyDevCard =
+        isMyTurn &&
+        buildAvailability?.developmentCard &&
+        !isRoadBuildingDevCardActive;
+
     return (
         <div className="panel actions">
             <p>Actions</p>
@@ -61,6 +67,7 @@ function Actions({
                         <button
                             onClick={() => {
                                 socket.emit("game:rollProductionDice");
+                                playSound("diceRoll");
                             }}
                         >
                             Roll Dice
@@ -89,9 +96,16 @@ function Actions({
             {isActionPhase && (
                 <>
                     {diceRoll && (
-                        <p>
-                            Dice Roll: {diceRoll[0]} + {diceRoll[1]}
-                        </p>
+
+                            <div className="dice-roll">
+                                <p>Dice Roll: </p>
+                                <div className="dice">
+                                    {diceRoll[0]}
+                                </div>
+                                <div className="dice">
+                                    {diceRoll[1]}
+                                </div>
+                            </div>
                     )}
 
                     {isMyTurn && (
@@ -143,7 +157,7 @@ function Actions({
                             </button>
 
                             <button
-                                disabled={isRoadBuildingDevCardActive}
+                                disabled={!canBuyDevCard}
                                 onClick={() => {
                                     socket.emit("game:buyDevCard");
                                 }}
@@ -155,6 +169,7 @@ function Actions({
                                 disabled={isRoadBuildingDevCardActive}
                                 onClick={() => {
                                     socket.emit("game:endTurn");
+                                    playSound("pickupDice");
                                 }}
                             >
                                 End Turn

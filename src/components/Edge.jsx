@@ -1,5 +1,5 @@
 import "./Edge.css";
-
+import { playSound } from "../services/soundManager";
 
 function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) {
     const vertexA = vertices.find(
@@ -77,7 +77,10 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
             r={radius}
             style={{ "--hover-radius": radius * 1.2 }}
             fill={fill}
-            onClick={() => onEdgeClick(edge.id)}
+            onClick={() => {
+                onEdgeClick(edge.id);
+                playSound("place");
+            }}
         />
     );
 }

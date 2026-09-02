@@ -136,7 +136,7 @@ function Lobby({
                             Play
                         </button>
 
-                        <div>
+                        <div className="host-controls-extra">
                             <label>
                                 Robber Safety Number: {robberSafetyNumber}
                                 <input
