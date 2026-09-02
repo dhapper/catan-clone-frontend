@@ -16,6 +16,7 @@ import Discard from "./popup/Discard";
 import RobberSteal from "./popup/RobberSteal";
 import Monopoly from "./popup/Monopoly";
 import Invention from "./popup/Invention";
+import GameOver from "./popup/GameOver";
 import { playSound } from "./services/soundManager";
 
 function App() {
