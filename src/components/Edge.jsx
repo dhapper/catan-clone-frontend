@@ -79,7 +79,6 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
             fill={fill}
             onClick={() => {
                 onEdgeClick(edge.id);
-                playSound("place");
             }}
         />
     );

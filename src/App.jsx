@@ -16,6 +16,7 @@ import Discard from "./popup/Discard";
 import RobberSteal from "./popup/RobberSteal";
 import Monopoly from "./popup/Monopoly";
 import Invention from "./popup/Invention";
+import { playSound } from "./services/soundManager";
 
 function App() {
     const [board, setBoard] = useState(null);
@@ -92,9 +93,14 @@ function App() {
             setMyPlayerId(player.id);
         });
 
+        socket.on("game:sound", (soundName) => {
+            playSound(soundName);
+        });
+
         return () => {
             socket.off("connect");
             socket.off("game:state");
+            socket.off("game:sound");
         };
     }, []);
 

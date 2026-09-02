@@ -80,7 +80,6 @@ function Vertex({
             onClick={() => {
                 if (isBuildable) {
                     onVertexClick(vertex.id);
-                    playSound("place");
                 }
             }}
         >

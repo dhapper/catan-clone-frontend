@@ -2,7 +2,6 @@ import "./Actions.css";
 import { GAMEPLAY_SUBPHASES } from "../constants/GameConstants";
 import socket from "../services/socket";
 import { STRUCTURES } from "../constants/GameConstants";
-import { playSound } from "../services/soundManager";
 
 function Actions({
     myPlayerId,
@@ -67,7 +66,6 @@ function Actions({
                         <button
                             onClick={() => {
                                 socket.emit("game:rollProductionDice");
-                                playSound("diceRoll");
                             }}
                         >
                             Roll Dice
@@ -169,7 +167,6 @@ function Actions({
                                 disabled={isRoadBuildingDevCardActive}
                                 onClick={() => {
                                     socket.emit("game:endTurn");
-                                    playSound("pickupDice");
                                 }}
                             >
                                 End Turn

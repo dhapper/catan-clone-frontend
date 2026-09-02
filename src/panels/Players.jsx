@@ -123,7 +123,6 @@ function Players({
                 <p>*Ties are decided by join order</p>
             )}
 
-            <div>hello</div>
         </div>
     );
 }
