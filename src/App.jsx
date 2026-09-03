@@ -244,16 +244,6 @@ function App() {
         return <div>Loading game...</div>;
     }
 
-    console.log(
-        "DISCARD DEBUG:",
-        {
-            phase,
-            subphase,
-            myPlayerId,
-            discardRequirement: discardRequirements[myPlayerId]
-        }
-    );
-
     return (
         <div className="game-layout">
 

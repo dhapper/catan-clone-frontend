@@ -1,0 +1,49 @@
+
+.game-over {
+    width: 350px;
+    padding: 25px 30px;
+    text-align: center;
+}
+
+.game-over h2 {
+    margin: 0 0 8px;
+}
+
+.game-over p {
+    margin: 0 0 25px;
+}
+
+.game-over-leaderboard {
+    width: 100%;
+}
+
+.leaderboard-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 70px;
+    align-items: center;
+
+    padding: 10px 12px;
+    box-sizing: border-box;
+}
+
+.leaderboard-header {
+    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 4px;
+}
+
+.leaderboard-row:not(.leaderboard-header) {
+    border-bottom: 1px solid #ddd;
+}
+
+.leaderboard-row span:first-child {
+    text-align: left;
+}
+
+.leaderboard-row span:nth-child(2) {
+    text-align: left;
+}
+
+.leaderboard-row span:last-child {
+    text-align: right;
+}
