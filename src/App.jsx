@@ -18,7 +18,7 @@ import Monopoly from "./popup/Monopoly";
 import Invention from "./popup/Invention";
 import GameOver from "./popup/GameOver";
 import { playSound } from "./services/soundManager";
-import TopRight from "./ui/ResetButton";
+import { ResetButton } from "./ui/ResetButton";
 function App() {
     const [board, setBoard] = useState(null);
     const [colors, setColors] = useState([]);
@@ -250,8 +250,11 @@ function App() {
 
     return (
         <div className="game-layout">
-            <TopRight clicked={resetGame} />
             <div className="game-left">
+
+                {myPlayer?.isHost && (
+                    <ResetButton clicked={resetGame}/>
+                )}
 
                 {phase != GAME_PHASES.LOBBY &&
                     myPlayer?.isHost && (

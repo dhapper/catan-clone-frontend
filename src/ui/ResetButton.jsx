@@ -1,7 +1,7 @@
 import React from 'react';
 import './ResetButton.css';
 
-const TopRight = ({clicked}) => {
+export const TopRight = ({clicked}) => {
   return (
     <button 
       className="top-right-btn"
@@ -12,4 +12,13 @@ const TopRight = ({clicked}) => {
   );
 };
 
-export default TopRight;
+export const ResetButton = ({clicked}) => {
+  return (
+    <button 
+      // className="top-right-btn"
+      onClick={() => clicked()}
+    >
+      Reset
+    </button>
+  );
+};

@@ -1,7 +1,7 @@
 .resource-token {
     position: relative;
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     border: 3px solid white;
     border-radius: 12px;
     display: flex;

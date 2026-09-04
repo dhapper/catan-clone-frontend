@@ -20,11 +20,18 @@ function TradeCreation({ player, onCancel }) {
     const [wantedResources, setWantedResources] =
         useState({ ...EMPTY_RESOURCES });
 
+    function clearResources() {
+        setOfferedResources({ ...EMPTY_RESOURCES });
+        setWantedResources({ ...EMPTY_RESOURCES });
+    }
+
     function handleBankTrade() {
         socket.emit("game:bankTrade", {
             offered: offeredResources,
             wanted: wantedResources
         });
+
+        clearResources();
     }
 
     function handlePlayerTrade() {
@@ -32,6 +39,8 @@ function TradeCreation({ player, onCancel }) {
             offered: offeredResources,
             wanted: wantedResources
         });
+
+        clearResources();
     }
 
     return (
