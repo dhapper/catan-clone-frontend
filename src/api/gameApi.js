@@ -34,6 +34,27 @@ export async function buildSettlement(vertexId) {
     return response.json();
 }
 
+export async function resetGame() {
+    const response = await fetch(
+        `${API_URL}/game/reset`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+    );
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(
+            error.error || "Failed to build reset game"
+        );
+    }
+
+    return response.json();
+}
+
 export async function buildRoad(edgeId) {
     const response = await fetch(
         `${API_URL}/game/build/road`,

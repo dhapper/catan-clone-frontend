@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { getGame, buildSettlement, buildRoad, buildCity } from "./api/gameApi";
+import { getGame, buildSettlement, buildRoad, buildCity, resetGame } from "./api/gameApi";
 import { SETUP_SUBPHASES, GAME_PHASES, GAMEPLAY_SUBPHASES } from "./constants/GameConstants";
 import socket from "./services/socket";
 import Board from "./components/Board";
@@ -18,7 +18,7 @@ import Monopoly from "./popup/Monopoly";
 import Invention from "./popup/Invention";
 import GameOver from "./popup/GameOver";
 import { playSound } from "./services/soundManager";
-
+import TopRight from "./ui/ResetButton";
 function App() {
     const [board, setBoard] = useState(null);
     const [colors, setColors] = useState([]);
@@ -216,6 +216,10 @@ function App() {
         }
     }
 
+    async function resetGameNoAuth() {
+        await resetGame();
+    }
+
     function handleTileClick(tileId) {
         if (
             phase !== GAME_PHASES.GAMEPLAY ||
@@ -246,7 +250,7 @@ function App() {
 
     return (
         <div className="game-layout">
-
+            <TopRight clicked={resetGame} />
             <div className="game-left">
 
                 {phase != GAME_PHASES.LOBBY &&
