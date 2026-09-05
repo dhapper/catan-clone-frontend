@@ -22,6 +22,8 @@ import { playSound } from "./services/soundManager";
 import { ResetButton } from "./ui/ResetButton";
 import Info from "./popup/Info";
 import InfoButton from "./ui/InfoButton";
+import TurnTimerDisplay from "./ui/TurnTimerDisplay";
+
 
 
 function App() {
@@ -52,6 +54,7 @@ function App() {
     const [setupTurnOrder, setSetupTurnOrder] = useState([]);   // roll order
     const [showInfoPanel, setShowInfoPanel] = useState(false);
     const [pieceLimits, setPieceLimits] = useState(null);
+    const [turnEndsAt, setTurnEndsAt] = useState(null);
 
     const [boardScale, setBoardScale] = useState(1);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
@@ -89,6 +92,7 @@ function App() {
             setNewBoardLayout(data.boardLayout);
             setWinner(data.winner);
             setSetupTurnOrder(data.setupTurnOrder ?? []);
+            setTurnEndsAt(data.turnEndsAt);
 
 
             getGame()
@@ -353,6 +357,10 @@ function App() {
 
                 <InfoButton
                     setShowInfoPanel={setShowInfoPanel}
+                />
+
+                <TurnTimerDisplay 
+                    turnEndsAt={turnEndsAt} 
                 />
 
                 <RollComponent
