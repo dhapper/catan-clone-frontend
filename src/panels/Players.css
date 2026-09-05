@@ -42,6 +42,7 @@
     align-items: center;
     width: 100%;
     gap: 2%;
+    
 }
 
 .player-card {
@@ -57,4 +58,8 @@
 /* Gameplay cards use the full parent width */
 .player-row:not(:has(.turn-order-rolls)) .player-card {
     width: 100%;
+}
+
+.players{
+    padding: 0px 10px;
 }

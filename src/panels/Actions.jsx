@@ -16,7 +16,8 @@ function Actions({
     buildableRoads,
     buildableSettlements,
     buildableCities,
-    setShowTradeCreation
+    setShowTradeCreation,
+    pieces
 }) {
     const isMyTurn = myPlayerId === currentPlayerId;
 
@@ -56,126 +57,77 @@ function Actions({
 
     return (
         <div className="panel actions">
-            <p>Actions</p>
+            <div className="header">
+                <p>Actions</p>
+            </div>
 
+            <div className="action-buttons">
 
-            {/* Production phase */}
-            {isProductionPhase && (
-                <>
-                    {isMyTurn ? (
-                        <button
-                            onClick={() => {
-                                socket.emit("game:rollProductionDice");
-                            }}
-                        >
-                            Roll Dice
-                        </button>
-                    ) : (
-                        <p>
-                            Waiting for current player to roll dice...
-                        </p>
-                    )}
-                </>
-            )}
+                <button
+                    disabled={!canBuildRoad}
+                    onClick={() =>
+                        setBuildMode(
+                            buildMode === STRUCTURES.ROAD
+                                ? null
+                                : STRUCTURES.ROAD
+                        )
+                    }
+                >
+                    Road x{pieces.road}
+                </button>
 
-            {subphase === GAMEPLAY_SUBPHASES.DISCARDING && (
-                <>
-                    {diceRoll && (
-                        <p>
-                            Dice Roll: {diceRoll[0]} + {diceRoll[1]}
-                        </p>
-                    )}
+                <button
+                    disabled={!canBuildSettlement}
+                    onClick={() =>
+                        setBuildMode(
+                            buildMode === STRUCTURES.SETTLEMENT
+                                ? null
+                                : STRUCTURES.SETTLEMENT
+                        )
+                    }
+                >
+                    Settlement x{pieces.settlement}
+                </button>
 
-                    <p>Waiting for players to discard...</p>
-                </>
-            )}
+                <button
+                    disabled={!canBuildCity}
+                    onClick={() =>
+                        setBuildMode(
+                            buildMode === STRUCTURES.CITY
+                                ? null
+                                : STRUCTURES.CITY
+                        )
+                    }
+                >
+                    City x{pieces.city}
+                </button>
 
-            {/* Action phase */}
-            {isActionPhase && (
-                <>
-                    {diceRoll && (
+                <button
+                    disabled={isRoadBuildingDevCardActive}
+                    onClick={() => setShowTradeCreation(true)}
+                >
+                    Trade
+                </button>
 
-                            <div className="dice-roll">
-                                <p>Dice Roll: </p>
-                                <div className="dice">
-                                    {diceRoll[0]}
-                                </div>
-                                <div className="dice">
-                                    {diceRoll[1]}
-                                </div>
-                            </div>
-                    )}
+                <button
+                    disabled={!canBuyDevCard}
+                    onClick={() => {
+                        socket.emit("game:buyDevCard");
+                    }}
+                >
+                    Card
+                </button>
 
-                    {isMyTurn && (
-                        <>
-                            <button
-                                disabled={!canBuildRoad}
-                                onClick={() =>
-                                    setBuildMode(
-                                        buildMode === STRUCTURES.ROAD
-                                            ? null
-                                            : STRUCTURES.ROAD
-                                    )
-                                }
-                            >
-                                Build Road
-                            </button>
+                <button
+                    disabled={isRoadBuildingDevCardActive}
+                    onClick={() => {
+                        socket.emit("game:endTurn");
+                    }}
+                >
+                    End Turn
+                </button>
 
-                            <button
-                                disabled={!canBuildSettlement}
-                                onClick={() =>
-                                    setBuildMode(
-                                        buildMode === STRUCTURES.SETTLEMENT
-                                            ? null
-                                            : STRUCTURES.SETTLEMENT
-                                    )
-                                }
-                            >
-                                Build Settlement
-                            </button>
-
-                            <button
-                                disabled={!canBuildCity}
-                                onClick={() =>
-                                    setBuildMode(
-                                        buildMode === STRUCTURES.CITY
-                                            ? null
-                                            : STRUCTURES.CITY
-                                    )
-                                }
-                            >
-                                Build City
-                            </button>
-
-                            <button
-                                disabled={isRoadBuildingDevCardActive}
-                                onClick={() => setShowTradeCreation(true)}
-                            >
-                                Trade
-                            </button>
-
-                            <button
-                                disabled={!canBuyDevCard}
-                                onClick={() => {
-                                    socket.emit("game:buyDevCard");
-                                }}
-                            >
-                                Buy Development Card
-                            </button>
-
-                            <button
-                                disabled={isRoadBuildingDevCardActive}
-                                onClick={() => {
-                                    socket.emit("game:endTurn");
-                                }}
-                            >
-                                End Turn
-                            </button>
-                        </>
-                    )}
-
-                </>
-            )}
+            </div>
         </div>
     );
 }

@@ -199,6 +199,7 @@ function Board({
             width={boardWidth}
             height={boardHeight}
             viewBox={`0 0 ${boardWidth} ${boardHeight}`}
+            // preserveAspectRatio="xMidYMid meet"
             onWheel={handleWheel}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -206,12 +207,31 @@ function Board({
             onMouseLeave={handleMouseUp}
             onClickCapture={handleClickCapture}
             style={{
-                cursor: isDragging.current
-                    ? "grabbing"
-                    : "grab"
+                cursor: isDragging.current ? "grabbing" : "grab",
+                overflow: "visible"
             }}
         >
+
+            <defs>
+                <filter
+                    id="island-shadow"
+                    x="-50%"
+                    y="-50%"
+                    width="200%"
+                    height="200%"
+                >
+                    <feDropShadow
+                        dx="0"
+                        dy="20"
+                        stdDeviation="60"
+                        floodColor="#c2a66b"
+                        floodOpacity="1"
+                    />
+                </filter>
+            </defs>
+
             <g
+                filter="url(#island-shadow)"
                 transform={`
                     translate(${boardPan.x}, ${boardPan.y})
                     translate(${boardWidth / 2}, ${boardHeight / 2})
@@ -270,7 +290,7 @@ function Board({
                         players={board.players}
                         buildableSettlements={
                             canPlaceSetupSettlement ||
-                            canPlaceGameplaySettlement
+                                canPlaceGameplaySettlement
                                 ? board.buildableSettlements
                                 : []
                         }

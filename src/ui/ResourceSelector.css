@@ -13,6 +13,32 @@
     justify-content: center;
 }
 
+.quantityButtons button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background-color: #5ddf68;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantityButtons button:disabled {
+    background-color: #ccc;
+    cursor: cursor-not-allowed;
+}
+
+.quantityButtons button:disabled:hover {
+    transform: none;
+}
+
 .resourceSectionGroup {
     display: flex;
     flex-direction: column;

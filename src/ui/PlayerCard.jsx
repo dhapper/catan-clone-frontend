@@ -78,17 +78,16 @@ function PlayerCard({
 
                         <span>
                             <img
-                                className="icon"
+                                className={`icon ${player.hasLongestRoad ? "achievement" : ""}`}
                                 src={road}
                                 alt="Longest Road"
                             />
-
                             {player.longestRoad}
                         </span>
 
                         <span>
                             <img
-                                className="icon"
+                                className={`icon ${player.hasLargestArmy ? "achievement" : ""}`}
                                 src={knight}
                                 alt="Largest Army"
                             />
@@ -103,7 +102,7 @@ function PlayerCard({
             <div className="player-indicators">
                 {player.id === myPlayerId && (
                     <div className="player-you">
-                        YOU
+                        👤︎
                     </div>
                 )}
 

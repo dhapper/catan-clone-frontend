@@ -12,6 +12,7 @@ function Lobby({
     robberSafetyNumber,
     bankResourceCount,
     victoryPointsNeeded,
+    pieceLimits,
     boardLayout
 }) {
     const [name, setName] = useState("");
@@ -21,6 +22,9 @@ function Lobby({
     const [newBankResourceCount, setNewBankResourceCount] = useState("");
     const [newVictoryPointsNeeded, setNewVictoryPointsNeeded] = useState("");
     const [newBoardLayout, setNewBoardLayout] = useState("");
+    const [newRoadLimit, setNewRoadLimit] = useState("");
+    const [newSettlementLimit, setNewSettlementLimit] = useState("");
+    const [newCityLimit, setNewCityLimit] = useState("");
 
     function createPlayer() {
         if (!name.trim()) {
@@ -52,7 +56,9 @@ function Lobby({
 
     return (
         <div className="panel lobby">
-            <p>lobby</p>
+            <div className="header">
+                <p>Lobby</p>
+            </div>
 
             <div className="player-list">
                 {players.map(player => (
@@ -236,6 +242,87 @@ function Lobby({
                                                 newBoardLayout
                                             );
                                             setNewBoardLayout("");
+                                        }
+                                    }}
+                                >
+                                    Submit
+                                </button>
+                            </label>
+
+                            <label>
+                                Road Pieces: {pieceLimits?.road}
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={newRoadLimit}
+                                    onChange={(event) => {
+                                        setNewRoadLimit(event.target.value);
+                                    }}
+                                />
+                                <button
+                                    onClick={() => {
+                                        const value = Number(newRoadLimit);
+
+                                        if (value > 0) {
+                                            socket.emit("game:setPieceLimit", {
+                                                piece: "road",
+                                                value
+                                            });
+                                            setNewRoadLimit("");
+                                        }
+                                    }}
+                                >
+                                    Submit
+                                </button>
+                            </label>
+
+                            <label>
+                                Settlement Pieces: {pieceLimits?.settlement}
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={newSettlementLimit}
+                                    onChange={(event) => {
+                                        setNewSettlementLimit(event.target.value);
+                                    }}
+                                />
+                                <button
+                                    onClick={() => {
+                                        const value = Number(newSettlementLimit);
+
+                                        if (value > 0) {
+                                            socket.emit("game:setPieceLimit", {
+                                                piece: "settlement",
+                                                value
+                                            });
+                                            setNewSettlementLimit("");
+                                        }
+                                    }}
+                                >
+                                    Submit
+                                </button>
+                            </label>
+
+                            <label>
+                                City Pieces: {pieceLimits?.city}
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={newCityLimit}
+                                    onChange={(event) => {
+                                        setNewCityLimit(event.target.value);
+                                    }}
+                                />
+                                <button
+                                    onClick={() => {
+                                        const value = Number(newCityLimit);
+
+                                        if (value > 0) {
+                                            socket.emit("game:setPieceLimit", {
+                                                piece: "city",
+                                                value
+                                            });
+                                            setNewCityLimit("");
                                         }
                                     }}
                                 >

@@ -17,8 +17,13 @@ import RobberSteal from "./popup/RobberSteal";
 import Monopoly from "./popup/Monopoly";
 import Invention from "./popup/Invention";
 import GameOver from "./popup/GameOver";
+import RollComponent from "./ui/RollComponent";
 import { playSound } from "./services/soundManager";
 import { ResetButton } from "./ui/ResetButton";
+import Info from "./popup/Info";
+import InfoButton from "./ui/InfoButton";
+
+
 function App() {
     const [board, setBoard] = useState(null);
     const [colors, setColors] = useState([]);
@@ -45,11 +50,14 @@ function App() {
     const [newBoardLayout, setNewBoardLayout] = useState("");
     const [winner, setWinner] = useState(null);
     const [setupTurnOrder, setSetupTurnOrder] = useState([]);   // roll order
+    const [showInfoPanel, setShowInfoPanel] = useState(false);
+    const [pieceLimits, setPieceLimits] = useState(null);
 
     const [boardScale, setBoardScale] = useState(1);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
 
     const myPlayer = players.find(player => player.id === myPlayerId);
+    const currentPlayer = players.find(player => player.id === currentPlayerId);
 
     useEffect(() => {
         console.log("Setting up players:update listener");
@@ -77,9 +85,11 @@ function App() {
             setRobberSafetyNumber(data.robberSafetyNumber);
             setBankResourceCount(data.bankResourceCount);
             setVictoryPointsNeeded(data.victoryPointsNeeded);
+            setPieceLimits(data.pieceLimits);
             setNewBoardLayout(data.boardLayout);
             setWinner(data.winner);
             setSetupTurnOrder(data.setupTurnOrder ?? []);
+
 
             getGame()
                 .then((data) => {
@@ -253,7 +263,7 @@ function App() {
             <div className="game-left">
 
                 {myPlayer?.isHost && (
-                    <ResetButton clicked={resetGame}/>
+                    <ResetButton clicked={resetGame} />
                 )}
 
                 {phase != GAME_PHASES.LOBBY &&
@@ -273,6 +283,7 @@ function App() {
                         bankResourceCount={bankResourceCount}
                         victoryPointsNeeded={victoryPointsNeeded}
                         boardLayout={newBoardLayout}
+                        pieceLimits={pieceLimits}
                     />
                 )}
 
@@ -310,109 +321,137 @@ function App() {
                     />
                 )}
 
-                {phase === GAME_PHASES.GAMEPLAY && (
-                    <Actions
-                        myPlayerId={myPlayerId}
-                        currentPlayerId={currentPlayerId}
-                        phase={phase}
-                        subphase={subphase}
-                        diceRoll={diceRoll}
-                        buildMode={buildMode}
-                        setBuildMode={setBuildMode}
-                        player={players.find(
-                            player => player.id === myPlayerId
-                        )}
-                        buildAvailability={buildAvailability}
-                        buildableRoads={board.buildableRoads}
-                        buildableSettlements={board.buildableSettlements}
-                        buildableCities={board.buildableCities}
-                        setShowTradeCreation={setShowTradeCreation}
-                    />
-                )}
+                {phase === GAME_PHASES.GAMEPLAY &&
+                    subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                    myPlayerId === currentPlayerId && (
+                        <Actions
+                            myPlayerId={myPlayerId}
+                            currentPlayerId={currentPlayerId}
+                            phase={phase}
+                            subphase={subphase}
+                            diceRoll={diceRoll}
+                            buildMode={buildMode}
+                            setBuildMode={setBuildMode}
+                            player={players.find(
+                                player => player.id === myPlayerId
+                            )}
+                            buildAvailability={buildAvailability}
+                            buildableRoads={board.buildableRoads}
+                            buildableSettlements={board.buildableSettlements}
+                            buildableCities={board.buildableCities}
+                            setShowTradeCreation={setShowTradeCreation}
+                            pieces={myPlayer.pieces}
+                        />
+                    )}
 
             </div>
 
-            {/* pop ups */}
-
-            {winner && (
-                <GameOver
-                    winner={winner}
-                    players={players}
-                />
-            )}
-
-            {phase === GAME_PHASES.GAMEPLAY &&
-                subphase === GAMEPLAY_SUBPHASES.ACTION &&
-                currentPlayerId === myPlayerId &&
-                showInvention && (
-                    <Invention
-                        bank={bank}
-                        setShowInvention={setShowInvention}
-                    />
-                )}
-
-            {phase === GAME_PHASES.GAMEPLAY &&
-                subphase === GAMEPLAY_SUBPHASES.ACTION &&
-                currentPlayerId === myPlayerId &&
-                showMonopoly && (
-                    <Monopoly
-                        onResourceSelect={(resource) => {
-                            console.log("MONOPOLY RESOURCE SELECTED:", resource);
-                            setShowMonopoly(false);
-                        }}
-                    />
-                )}
-
-            {phase === GAME_PHASES.GAMEPLAY &&
-                subphase === GAMEPLAY_SUBPHASES.DISCARDING &&
-                discardRequirements[myPlayerId] && (
-                    <Discard
-                        player={myPlayer}
-                        discardAmount={discardRequirements[myPlayerId]}
-                    />
-                )}
-
-            {phase === GAME_PHASES.GAMEPLAY &&
-                subphase === GAMEPLAY_SUBPHASES.ACTION &&
-                currentPlayerId === myPlayerId &&
-                robberVictims.length > 1 && (
-                    <RobberSteal
-                        players={players}
-                        robberVictims={robberVictims}
-                    />
-                )}
-
-            {phase === GAME_PHASES.GAMEPLAY &&
-                subphase === GAMEPLAY_SUBPHASES.ACTION &&
-                currentTrade && (
-                    currentTrade.playerId === myPlayerId ? (
-                        <TradeAcceptor
-                            player={myPlayer}
-                            currentTradeOffer={currentTrade}
-                            currentPlayerId={myPlayerId}
-                            players={players}
-                        />
-                    ) : (
-                        <TradeProposal
-                            player={myPlayer}
-                            currentTradeOffer={currentTrade}
-                            currentPlayerId={currentTrade.playerId}
-                        />
-                    )
-                )}
-
-            {phase === GAME_PHASES.GAMEPLAY &&
-                subphase === GAMEPLAY_SUBPHASES.ACTION &&
-                currentPlayerId === myPlayerId &&
-                !currentTrade &&
-                showTradeCreation && (
-                    <TradeCreation
-                        player={myPlayer}
-                        onCancel={() => setShowTradeCreation(false)}
-                    />
-                )}
 
             <div className="game-board">
+
+                {/* Overlay */}
+
+                <InfoButton
+                    setShowInfoPanel={setShowInfoPanel}
+                />
+
+                <RollComponent
+                    myPlayerId={myPlayerId}
+                    isMyTurn={myPlayerId === currentPlayerId}
+                    currentPlayer={currentPlayer}
+                    diceRoll={diceRoll}
+                    subphase={subphase}
+                />
+
+                {/* pop ups */}
+
+                {showInfoPanel && (
+                    <Info
+                        setShowInfoPanel={setShowInfoPanel}
+                        pieceLimits={pieceLimits}
+                        robberSafetyNumber={robberSafetyNumber}
+                        bankResourceCount={bankResourceCount}
+                        victoryPointsNeeded={victoryPointsNeeded}
+                    />
+                )}
+
+                {winner && (
+                    <GameOver
+                        winner={winner}
+                        players={players}
+                    />
+                )}
+
+                {phase === GAME_PHASES.GAMEPLAY &&
+                    subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                    currentPlayerId === myPlayerId &&
+                    showInvention && (
+                        <Invention
+                            bank={bank}
+                            setShowInvention={setShowInvention}
+                        />
+                    )}
+
+                {phase === GAME_PHASES.GAMEPLAY &&
+                    subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                    currentPlayerId === myPlayerId &&
+                    showMonopoly && (
+                        <Monopoly
+                            onResourceSelect={(resource) => {
+                                console.log("MONOPOLY RESOURCE SELECTED:", resource);
+                                setShowMonopoly(false);
+                            }}
+                        />
+                    )}
+
+                {phase === GAME_PHASES.GAMEPLAY &&
+                    subphase === GAMEPLAY_SUBPHASES.DISCARDING &&
+                    discardRequirements[myPlayerId] && (
+                        <Discard
+                            player={myPlayer}
+                            discardAmount={discardRequirements[myPlayerId]}
+                        />
+                    )}
+
+                {phase === GAME_PHASES.GAMEPLAY &&
+                    subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                    currentPlayerId === myPlayerId &&
+                    robberVictims.length > 1 && (
+                        <RobberSteal
+                            players={players}
+                            robberVictims={robberVictims}
+                        />
+                    )}
+
+                {phase === GAME_PHASES.GAMEPLAY &&
+                    subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                    currentTrade && (
+                        currentTrade.playerId === myPlayerId ? (
+                            <TradeAcceptor
+                                player={myPlayer}
+                                currentTradeOffer={currentTrade}
+                                currentPlayerId={myPlayerId}
+                                players={players}
+                            />
+                        ) : (
+                            <TradeProposal
+                                player={myPlayer}
+                                currentTradeOffer={currentTrade}
+                                currentPlayerId={currentTrade.playerId}
+                            />
+                        )
+                    )}
+
+                {phase === GAME_PHASES.GAMEPLAY &&
+                    subphase === GAMEPLAY_SUBPHASES.ACTION &&
+                    currentPlayerId === myPlayerId &&
+                    !currentTrade &&
+                    showTradeCreation && (
+                        <TradeCreation
+                            player={myPlayer}
+                            onCancel={() => setShowTradeCreation(false)}
+                        />
+                    )}
 
                 <Board
                     board={board}

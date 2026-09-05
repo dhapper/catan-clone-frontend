@@ -64,3 +64,7 @@
     height: 20px;
     filter: brightness(0) invert(1);
 }
+
+.icon.achievement {
+    filter: brightness(0) saturate(100%) invert(76%) sepia(90%) saturate(800%) hue-rotate(5deg);
+}

@@ -8,7 +8,10 @@ function Bank({ bank }) {
 
     return (
         <div className="panel">
-            <p>Bank</p>
+
+            <div className="header">
+                <p>Bank</p>
+            </div>
 
             <div className="bank-resources">
                 <ResourceToken

@@ -1,0 +1,39 @@
+
+
+.info img {
+    width: 40px;
+    height: 40px;
+
+    filter: brightness(0) invert(1);
+}
+
+.title-gap{
+    margin-top: 30px;
+}
+
+.settings-def {
+    width: fit-content;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.settings-def p {
+    margin: 4px 0;
+}
+
+.dev-card-def {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+}
+
+.dev-card-def img {
+    flex-shrink: 0;
+}
+
+.dev-card-def p {
+    margin: 0;
+}

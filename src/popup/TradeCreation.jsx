@@ -71,10 +71,10 @@ function TradeCreation({ player, onCancel }) {
 
             <div className="tradeButtons">
                 <button onClick={handlePlayerTrade}>
-                    Offer Player Trade
+                    Player
                 </button>
                 <button onClick={handleBankTrade}>
-                    Bank Trade
+                    Bank
                 </button>
                 <button onClick={onCancel}>
                     Cancel

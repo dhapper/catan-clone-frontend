@@ -5,8 +5,9 @@
 
 .tradeButtons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     margin: 12px auto; /* top/bottom 12px, left/right auto for horizontal centering */
     justify-content: center;
     width: min-content;
+    min-width: 100%;
 }

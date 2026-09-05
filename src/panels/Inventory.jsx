@@ -19,7 +19,9 @@ function Inventory({
 
     return (
         <div className="panel">
-            <p>Inventory</p>
+            <div className="header">
+                <p>Inventory</p>
+            </div>
 
             <div className="inventory-resources">
                 <ResourceToken

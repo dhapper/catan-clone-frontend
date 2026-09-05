@@ -58,7 +58,10 @@ function Players({
 
     return (
         <div className="panel players">
-            <p>Players</p>
+
+            <div className="header">
+                <p>Players</p>
+            </div>
 
             <div className="player-list">
                 {sortedPlayers.map(player => (

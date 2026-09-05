@@ -1,0 +1,40 @@
+.roll-component {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 9999;
+}
+
+.roll-component p {
+  background-color: black;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.roll-component button {
+  padding: 16px;
+    font-size: 1.5rem;
+}
+
+.dice-roll-result {
+  display: flex;
+  align-items: center;
+}
+
+.dice {
+    width: 50px;
+    height: 50px;
+    margin-right: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #cab398;
+    color: black;
+    border-radius: 8px;
+    border: 2px solid #000;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow:
+        inset 3px 3px 0 #e5d2bb,
+        inset -3px -3px 0 #8f7961;
+}

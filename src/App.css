@@ -50,6 +50,17 @@
     z-index: 0;
 
     touch-action: none;
+
+    position: relative;
+
+    background-image: url("./assets/backgrounds/waterbg.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.game-board svg {
+    flex-shrink: 0;
 }
 
 .game-right {
@@ -86,6 +97,8 @@ button {
     border-radius: 8px;
     transition: transform 0.15s ease, background-color 0.15s ease;
     margin: 8px;
+    font-weight: bold;
+    padding: 8px;
 }
 
 button:hover {
