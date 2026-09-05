@@ -347,6 +347,9 @@ function Lobby({
                         <p>Robber Safety Number: {robberSafetyNumber}</p>
                         <p>Bank Resource Count: {bankResourceCount}</p>
                         <p>Victory Points Needed: {victoryPointsNeeded}</p>
+                        <p>Roads: {pieceLimits.road}</p>
+                        <p>Settlements: {pieceLimits.settlement}</p>
+                        <p>Cities: {pieceLimits.city}</p>
                     </div>
                 )}
 
