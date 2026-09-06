@@ -55,6 +55,8 @@ function App() {
     const [showInfoPanel, setShowInfoPanel] = useState(false);
     const [pieceLimits, setPieceLimits] = useState(null);
     const [turnEndsAt, setTurnEndsAt] = useState(null);
+    const [timerPaused, setTimerPaused] = useState(false);
+    const [timerRemainingMs, setTimerRemainingMs] = useState(null);
 
     const [boardScale, setBoardScale] = useState(1);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
@@ -93,6 +95,8 @@ function App() {
             setWinner(data.winner);
             setSetupTurnOrder(data.setupTurnOrder ?? []);
             setTurnEndsAt(data.turnEndsAt);
+            setTimerPaused(data.timerPaused ?? false);
+            setTimerRemainingMs(data.timerRemainingMs ?? null);
 
 
             getGame()
@@ -360,7 +364,9 @@ function App() {
                 />
 
                 <TurnTimerDisplay 
-                    turnEndsAt={turnEndsAt} 
+                    turnEndsAt={turnEndsAt}
+                    timerPaused={timerPaused}
+                    timerRemainingMs={timerRemainingMs}
                 />
 
                 <RollComponent
