@@ -277,7 +277,9 @@ function App() {
 
                 {phase != GAME_PHASES.LOBBY &&
                     myPlayer?.isHost && (
-                        <button onClick={() => socket.emit("game:reset")}>
+                        <button
+                            className="btn-blue"
+                            onClick={() => socket.emit("game:reset")}>
                             Back to lobby
                         </button>
                     )}
@@ -364,10 +366,11 @@ function App() {
                     setShowInfoPanel={setShowInfoPanel}
                 />
 
-                <TurnTimerDisplay 
+                <TurnTimerDisplay
                     turnEndsAt={turnEndsAt}
                     timerPaused={timerPaused}
                     timerRemainingMs={timerRemainingMs}
+                    isHost={myPlayer?.isHost}
                 />
 
                 <RollComponent

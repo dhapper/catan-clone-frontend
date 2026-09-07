@@ -115,10 +115,11 @@ function Actions({
                         socket.emit("game:buyDevCard");
                     }}
                 >
-                    Card
+                    Buy Dev Card
                 </button>
 
                 <button
+                    className="btn-red"
                     disabled={isRoadBuildingDevCardActive}
                     onClick={() => {
                         socket.emit("game:endTurn");

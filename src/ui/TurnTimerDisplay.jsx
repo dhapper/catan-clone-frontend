@@ -1,8 +1,11 @@
 import "./TurnTimerDisplay.css";
 import { useEffect, useState } from "react";
 import socket from "../services/socket";
+import playIcon from "../assets/icons/other/play.svg"
+import pauseIcon from "../assets/icons/other/pause.svg"
+import IconButton from "./IconButton";
 
-function TurnTimerDisplay({ turnEndsAt, timerPaused, timerRemainingMs }) {
+function TurnTimerDisplay({ turnEndsAt, timerPaused, timerRemainingMs, isHost }) {
     const [secondsLeft, setSecondsLeft] = useState(null);
 
     useEffect(() => {
@@ -39,10 +42,16 @@ function TurnTimerDisplay({ turnEndsAt, timerPaused, timerRemainingMs }) {
 
     return (
         <div className="turn-timer">
-            <p>{minutes}:{seconds}</p>
-            <button onClick={() => socket.emit("game:toggleTimer")}>
-                {timerPaused ? "Resume" : "Pause"}
-            </button>
+            <p className={`clock ${minutes === "00" ? "clock-warning" : ""}`}>
+                {minutes}:{seconds}
+            </p>
+            {isHost && (
+                <IconButton
+                    icon={timerPaused ? playIcon : pauseIcon}
+                    alt={timerPaused ? "Resume" : "Pause"}
+                    onClick={() => socket.emit("game:toggleTimer")}
+                />
+            )}
         </div>
     );
 }

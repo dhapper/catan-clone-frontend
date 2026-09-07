@@ -138,13 +138,29 @@ function Lobby({
             {phase === "lobby" &&
                 players.find(player => player.id === myPlayerId)?.isHost && (
                     <div className="host-controls">
-                        <button onClick={() => socket.emit("game:start")}>
-                            Play
-                        </button>
 
-                        <div className="host-controls-extra">
+                        <div className="host-buttons">
+                            <button
+                                className="btn-blue"
+                                onClick={() => socket.emit("game:start")}>
+                                Play
+                            </button>
+
+                            <button
+                                onClick={() =>
+                                    socket.emit("game:regenerateBoard")
+                                }
+                            >
+                                Reroll Board
+                            </button>
+                        </div>
+
+                        <div className="setting-control">
                             <label>
                                 Robber Safety Number: {robberSafetyNumber}
+                            </label>
+
+                            <div className="setting-input">
                                 <input
                                     type="number"
                                     min="1"
@@ -153,6 +169,7 @@ function Lobby({
                                         setNewRobberSafetyNumber(event.target.value);
                                     }}
                                 />
+
                                 <button
                                     onClick={() => {
                                         const value = Number(newRobberSafetyNumber);
@@ -168,10 +185,15 @@ function Lobby({
                                 >
                                     Submit
                                 </button>
-                            </label>
+                            </div>
+                        </div>
 
+                        <div className="setting-control">
                             <label>
                                 Bank Resource Count: {bankResourceCount}
+                            </label>
+
+                            <div className="setting-input">
                                 <input
                                     type="number"
                                     min="1"
@@ -180,6 +202,7 @@ function Lobby({
                                         setNewBankResourceCount(event.target.value);
                                     }}
                                 />
+
                                 <button
                                     onClick={() => {
                                         const value = Number(newBankResourceCount);
@@ -195,10 +218,15 @@ function Lobby({
                                 >
                                     Submit
                                 </button>
-                            </label>
+                            </div>
+                        </div>
 
+                        <div className="setting-control">
                             <label>
                                 Victory Points Needed: {victoryPointsNeeded}
+                            </label>
+
+                            <div className="setting-input">
                                 <input
                                     type="number"
                                     min="1"
@@ -207,6 +235,7 @@ function Lobby({
                                         setNewVictoryPointsNeeded(event.target.value);
                                     }}
                                 />
+
                                 <button
                                     onClick={() => {
                                         const value = Number(newVictoryPointsNeeded);
@@ -222,10 +251,15 @@ function Lobby({
                                 >
                                     Submit
                                 </button>
-                            </label>
+                            </div>
+                        </div>
 
+                        <div className="setting-control">
                             <label>
                                 Board Layout: {boardLayout?.join(",")}
+                            </label>
+
+                            <div className="setting-input">
                                 <input
                                     type="text"
                                     value={newBoardLayout}
@@ -234,6 +268,7 @@ function Lobby({
                                     }}
                                     placeholder="3,4,5,4,3"
                                 />
+
                                 <button
                                     onClick={() => {
                                         if (newBoardLayout.trim()) {
@@ -247,10 +282,15 @@ function Lobby({
                                 >
                                     Submit
                                 </button>
-                            </label>
+                            </div>
+                        </div>
 
+                        <div className="setting-control">
                             <label>
                                 Road Pieces: {pieceLimits?.road}
+                            </label>
+
+                            <div className="setting-input">
                                 <input
                                     type="number"
                                     min="1"
@@ -259,6 +299,7 @@ function Lobby({
                                         setNewRoadLimit(event.target.value);
                                     }}
                                 />
+
                                 <button
                                     onClick={() => {
                                         const value = Number(newRoadLimit);
@@ -274,10 +315,15 @@ function Lobby({
                                 >
                                     Submit
                                 </button>
-                            </label>
+                            </div>
+                        </div>
 
+                        <div className="setting-control">
                             <label>
                                 Settlement Pieces: {pieceLimits?.settlement}
+                            </label>
+
+                            <div className="setting-input">
                                 <input
                                     type="number"
                                     min="1"
@@ -286,6 +332,7 @@ function Lobby({
                                         setNewSettlementLimit(event.target.value);
                                     }}
                                 />
+
                                 <button
                                     onClick={() => {
                                         const value = Number(newSettlementLimit);
@@ -301,10 +348,15 @@ function Lobby({
                                 >
                                     Submit
                                 </button>
-                            </label>
+                            </div>
+                        </div>
 
+                        <div className="setting-control">
                             <label>
                                 City Pieces: {pieceLimits?.city}
+                            </label>
+
+                            <div className="setting-input">
                                 <input
                                     type="number"
                                     min="1"
@@ -313,6 +365,7 @@ function Lobby({
                                         setNewCityLimit(event.target.value);
                                     }}
                                 />
+
                                 <button
                                     onClick={() => {
                                         const value = Number(newCityLimit);
@@ -328,16 +381,9 @@ function Lobby({
                                 >
                                     Submit
                                 </button>
-                            </label>
-
-                            <button
-                                onClick={() =>
-                                    socket.emit("game:regenerateBoard")
-                                }
-                            >
-                                Reroll Board
-                            </button>
+                            </div>
                         </div>
+
                     </div>
                 )}
 
@@ -352,9 +398,6 @@ function Lobby({
                         <p>Cities: {pieceLimits.city}</p>
                     </div>
                 )}
-
-
-
         </div>
     );
 }

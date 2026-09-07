@@ -2,6 +2,10 @@
 
 :root {
     --green-hover: #a2ec7c;
+    --default-button: #e2c077;
     --red-button: #ec7c7c;
     --blue-button: #7cb6ec;
+
+    --background: #270000;
+    --accent: #ffd86e;
 }

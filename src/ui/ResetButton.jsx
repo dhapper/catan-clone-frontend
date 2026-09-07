@@ -15,7 +15,7 @@ export const TopRight = ({clicked}) => {
 export const ResetButton = ({clicked}) => {
   return (
     <button 
-      // className="top-right-btn"
+      className="btn-blue"
       onClick={() => clicked()}
     >
       Reset

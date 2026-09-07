@@ -27,7 +27,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: 3px solid white;
+    border: 3px solid var(--accent);
     box-sizing: border-box;
     cursor: pointer;
     transition:
@@ -57,14 +57,44 @@
     margin: 15px auto 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    width: min-content;
+    align-items: flex-start;
 }
 
-.host-controls-extra {
-    margin-top: 15px;
+.host-controls input {
+    width: 80px;
+}
+
+.host-controls button {
+    width: fit-content;
+}
+
+.host-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
+.host-buttons button {
+    margin-left: 0px;
+}
+
+.setting-control {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    width: min-content;
+    align-items: flex-start;
+}
+
+.setting-control label {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+.setting-input {
+    display: flex;
+    align-items: center;
+    margin-top: -6px;
 }

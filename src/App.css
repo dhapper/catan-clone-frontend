@@ -29,8 +29,8 @@
 
     z-index: 2;
 
-    border-right: solid 3px white;
-    background-color: black;
+    border-right: solid 4px var(--accent);
+    background-color: var(--background);
 }
 
 .game-board {
@@ -91,8 +91,10 @@
     }
 }
 
+/* global buttons */
+
 button {
-    background-color: lightblue;
+    background-color: var(--default-button);
     border: 3px solid black;
     border-radius: 8px;
     transition: transform 0.15s ease, background-color 0.15s ease;
@@ -101,27 +103,25 @@ button {
     padding: 8px;
 }
 
+.btn-blue {
+    background-color: var(--blue-button);
+}
+
+.btn-red {
+    background-color: var(--red-button);
+}
+
 button:hover {
     background-color: rgb(118, 216, 118);
     transform: scale(1.1);
 }
 
-.top-right-btn {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 9999; /* Ensures it sits on top of other elements */
-  
-  /* Optional styling for a cleaner look */
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+/* global text */
+
+p {
+    color: var(--accent);
 }
 
-.top-right-btn:hover {
-  background-color: #0056b3;
+label {
+    color: var(--accent);
 }
