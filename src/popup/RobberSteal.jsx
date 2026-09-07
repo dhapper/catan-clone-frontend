@@ -21,7 +21,7 @@ function RobberSteal({
 
     return (
         <div className="popup panel">
-            <p>Choose player to steal from:</p>
+            <h2>Choose player to steal from:</h2>
 
             <div className="trade-players">
                 {victims.map((player) => (

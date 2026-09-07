@@ -11,3 +11,17 @@
     width: min-content;
     min-width: 100%;
 }
+
+.trade-resources {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.trade-players button {
+    background-color: color-mix(
+        in srgb,
+        var(--player-color) 50%,
+        white
+    );
+}

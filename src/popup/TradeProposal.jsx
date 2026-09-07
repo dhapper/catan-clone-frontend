@@ -8,7 +8,7 @@ import socket from "../services/socket";
 function TradeProposal({
     player,
     currentTradeOffer,
-    currentPlayerId
+    currentPlayerName
 }) {
     const resources = [
         "wood",
@@ -62,7 +62,7 @@ function TradeProposal({
 
     return (
         <div className="popup panel">
-            <p>Trade Proposal from {currentPlayerId}</p>
+            <h2>Trade Proposal from {currentPlayerName}</h2>
 
             <p>Wants:</p>
 
@@ -96,7 +96,9 @@ function TradeProposal({
                         Accept
                     </button>
 
-                    <button onClick={handleDecline}>
+                    <button
+                        className="btn-red"
+                        onClick={handleDecline}>
                         Decline
                     </button>
 

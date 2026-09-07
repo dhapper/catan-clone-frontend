@@ -58,7 +58,10 @@ function Info({
                 text="Victory Point: Worth 1 victory point."
             />
 
-            <button onClick={() => setShowInfoPanel(false)}>Close</button>
+            <button
+                className="btn-red"
+                onClick={() => setShowInfoPanel(false)}
+            >Close</button>
         </div>
     );
 }

@@ -456,6 +456,7 @@ function App() {
                                 player={myPlayer}
                                 currentTradeOffer={currentTrade}
                                 currentPlayerId={currentTrade.playerId}
+                                currentPlayerName={currentPlayer.name}
                             />
                         )
                     )}

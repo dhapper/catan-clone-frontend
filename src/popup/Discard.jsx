@@ -38,7 +38,7 @@ function Discard({ player, discardAmount }) {
 
     return (
         <div className="popup panel">
-            <p>Discard Resources</p>
+            <h2>Discard Resources</h2>
 
             <p>
                 You must discard {discardAmount} resource

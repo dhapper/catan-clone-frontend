@@ -9,5 +9,10 @@
 
     z-index: 1000;
 
-    background-color: black;
+    background-color: var(--background);
+}
+
+.popup h2 {
+    color: var(--accent);
+    margin-top: 0;
 }

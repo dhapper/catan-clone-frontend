@@ -65,7 +65,7 @@ function TradeAcceptor({
 
     return (
         <div className="popup panel">
-            <p>Trade Proposal from {currentPlayerId}</p>
+            <h2>Trade Proposal from {currentPlayerId}</h2>
 
             <p>Wants:</p>
 
@@ -91,17 +91,22 @@ function TradeAcceptor({
                             key={otherPlayer.id}
                             disabled={!hasAccepted}
                             onClick={() => handleSelectPlayer(otherPlayer.id)}
+                            style={{
+                                "--player-color": otherPlayer.color
+                            }}
                         >
                             {otherPlayer.name}
-                            {hasAccepted && " (Accepted)"}
-                            {declinedPlayerIds.includes(otherPlayer.id) && " (Declined)"}
+                            {hasAccepted && " ✓"}
+                            {declinedPlayerIds.includes(otherPlayer.id) && " ✕"}
                         </button>
                     );
                 })}
             </div>
 
-            <button onClick={handleCancelTrade}>
-                Cancel Trade
+            <button
+                className="btn-red"
+                onClick={handleCancelTrade}>
+                Cancel
             </button>
         </div>
     );

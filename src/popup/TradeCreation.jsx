@@ -45,7 +45,7 @@ function TradeCreation({ player, onCancel }) {
 
     return (
         <div className="popup panel">
-            <p>Trade Creation</p>
+            <h2>Trade Creation</h2>
 
             <div className="tradeUI">
 
@@ -76,7 +76,10 @@ function TradeCreation({ player, onCancel }) {
                 <button onClick={handleBankTrade}>
                     Bank
                 </button>
-                <button onClick={onCancel}>
+                <button
+                    className="btn-red"
+                    onClick={onCancel}
+                >
                     Cancel
                 </button>
             </div>

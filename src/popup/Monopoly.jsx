@@ -18,7 +18,7 @@ function Monopoly({ onResourceSelect }) {
 
     return (
         <div className="popup panel">
-            <p>Monopoly</p>
+            <h2>Monopoly</h2>
             <p>Choose which resource to monopolize:</p>
 
             <div className="resource-tokens">

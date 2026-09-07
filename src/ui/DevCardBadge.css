@@ -3,7 +3,7 @@
     height: 60px;
     flex-shrink: 0;
 
-    background-color: rgb(199, 114, 35);
+    background-color: var(--devCard);
     border: 3px solid white;
     border-radius: 8px;
 
@@ -34,5 +34,5 @@
 
 .dev-card-playable:hover {
     transform: scale(1.08);
-    background-color: rgb(96, 211, 96);
+    background-color: var(--green-hover);
 }

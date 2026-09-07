@@ -1,11 +1,14 @@
 /* theme.css */
 
 :root {
-    --green-hover: #a2ec7c;
+    --green-hover: #79c055;
     --default-button: #e2c077;
     --red-button: #ec7c7c;
     --blue-button: #7cb6ec;
 
     --background: #270000;
     --accent: #ffd86e;
+
+    --devCard: #4069c2;
+    --svp: #4f336e;
 }

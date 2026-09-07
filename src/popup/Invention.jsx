@@ -45,7 +45,7 @@ function Invention({ bank, setShowInvention }) {
 
     return (
         <div className="popup panel">
-            <p>Invention</p>
+            <h2>Invention</h2>
 
             <p>
                 Choose {INVENTION_AMOUNT} resources to receive from the bank.
