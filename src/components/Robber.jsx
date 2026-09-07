@@ -1,4 +1,5 @@
 import robberIcon from "../assets/icons/other/pawn.svg";
+import "./ClickableCircle.css";
 
 function Robber({
     x,
@@ -19,16 +20,21 @@ function Robber({
 
     return (
         <g>
-            {canPlace && (
-                <circle
-                    className="placeable"
-                    cx={x + size * 0.5}
-                    cy={y}
-                    r={size / 6}
-                    fill="white"
-                    onClick={onClick}
-                />
-            )}
+            <circle
+                className={
+                    canPlace
+                        ? "clickable-circle"
+                        : "clickable-circle-inactive"
+                }
+                cx={x + size * 0.5}
+                cy={y}
+                r={size / 6}
+                style={{
+                    "--hover-radius": size / 6 * 1.2
+                }}
+                fill="white"
+                onClick={canPlace ? onClick : undefined}
+            />
 
             <defs>
                 <filter

@@ -1,4 +1,5 @@
 import "./App.css";
+import "./constants/theme.css";
 import { useEffect, useState } from "react";
 import { getGame, buildSettlement, buildRoad, buildCity, resetGame } from "./api/gameApi";
 import { SETUP_SUBPHASES, GAME_PHASES, GAMEPLAY_SUBPHASES } from "./constants/GameConstants";

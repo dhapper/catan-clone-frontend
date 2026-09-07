@@ -1,4 +1,5 @@
 import "./Edge.css";
+import "./ClickableCircle.css";
 import { playSound } from "../services/soundManager";
 
 function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) {
@@ -28,9 +29,15 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
 
     // show nothing by default
     const hasRoad = !!edge.road;
-    if (!isBuildable && !hasRoad) {
-        return null;
-    }
+    const edgeClass =
+        isBuildable
+            ? "clickable-circle"
+            : hasRoad
+                ? "edge-existing"
+                : "clickable-circle-inactive";
+    // if (!isBuildable && !hasRoad) {
+    //     return null;
+    // }
 
     // road shape math
     const angle = Math.atan2(
@@ -65,13 +72,13 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
         );
     }
 
-    if (!isBuildable) {
-        return null;
-    }
+    // if (!isBuildable) {
+    //     return null;
+    // }
 
     return (
         <circle
-            className="edge"
+            className={`edge ${edgeClass}`}
             cx={centerX}
             cy={centerY}
             r={radius}

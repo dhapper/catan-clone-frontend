@@ -1,4 +1,5 @@
 import "./Vertex.css";
+import "./ClickableCircle.css";
 import { SETUP_SUBPHASES } from "../constants/GameConstants";
 import { playSound } from "../services/soundManager";
 
@@ -44,9 +45,9 @@ function Vertex({
         isCityBuildable;
 
     // Nothing to display here.
-    if (!vertex.building && !isBuildable) {
-        return null;
-    }
+    // if (!vertex.building && !isBuildable) {
+    //     return null;
+    // }
 
     const buildingType = vertex.building?.type;
 
@@ -76,7 +77,13 @@ function Vertex({
 
     return (
         <g
-            className={isBuildable ? "vertex-buildable" : "vertex-existing"}
+            className={
+                isBuildable
+                    ? "vertex-buildable"
+                    : vertex.building
+                        ? "vertex-existing"
+                        : "vertex-inactive"
+            }
             onClick={() => {
                 if (isBuildable) {
                     onVertexClick(vertex.id);
@@ -84,7 +91,15 @@ function Vertex({
             }}
         >
             <circle
-                className="vertex"
+                className={
+                    `vertex ${
+                        isBuildable
+                            ? "clickable-circle"
+                        : vertex.building
+                            ? "vertex-existing"
+                            : "clickable-circle-inactive"
+                    }`
+                }
                 cx={vertex.x}
                 cy={vertex.y}
                 r={buildingType === "city" ? radius * 1.4 : radius}

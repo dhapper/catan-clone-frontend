@@ -1,16 +1,6 @@
-.edge {
-    stroke: black;
-    stroke-width: 4;
-    cursor: pointer;
-
-    transition:
-        r 0.15s ease,
-        fill 0.15s ease;
-}
-
-.edge:hover {
-    r: var(--hover-radius);
-    fill: rgb(116, 226, 116);
+.edge-inactive {
+    opacity: 0;
+    r: 0;
 }
 
 .road {

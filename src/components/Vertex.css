@@ -1,18 +1,6 @@
 .vertex {
     stroke: black;
     stroke-width: 4;
-    transition:
-        r 0.15s ease,
-        fill 0.15s ease;
-}
-
-.vertex-buildable {
-    cursor: pointer;
-}
-
-.vertex-buildable:hover .vertex {
-    r: var(--hover-radius);
-    fill: rgb(116, 226, 116);
 }
 
 .vertex-existing {
@@ -26,10 +14,6 @@
     pointer-events: none;
 }
 
-.city {
+.city {}
 
-}
-
-.settlement {
-
-}
+.settlement {}
