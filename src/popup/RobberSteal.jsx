@@ -28,6 +28,9 @@ function RobberSteal({
                     <button
                         key={player.id}
                         onClick={() => handleSelectPlayer(player.id)}
+                        style={{
+                            "--player-color": player.color
+                        }}
                     >
                         {player.name}
                     </button>

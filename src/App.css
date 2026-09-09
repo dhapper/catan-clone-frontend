@@ -1,7 +1,6 @@
 .game-layout {
     --left-width: max(25vw, 300px);
-    /* --right-width: max(20vw, 200px); */
-    --right-width: max(0vw, 0px);
+    --right-width: max(20vw, 200px);
 
     display: grid;
     grid-template-columns:
@@ -72,12 +71,15 @@
     padding: 16px;
     overflow-y: auto;
 
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 
     z-index: 2;
 
-    border-left: solid 3px white;
-    background-color: black;
+    border-left: solid 4px var(--accent);
+    background-color: var(--background);
 }
 
 @media (max-width: 900px) {

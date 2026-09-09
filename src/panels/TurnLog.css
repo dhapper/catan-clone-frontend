@@ -1,0 +1,60 @@
+.turn-log-entry {
+    margin: 0 0 8px 0;
+    padding: 8px;
+    border-radius: 8px;
+    text-align: left;
+    border: 4px solid white;
+    padding-bottom: 0;
+}
+
+.current {
+    border: 4px solid var(--green-current);
+}
+
+.no-content {
+    padding: 8px;
+}
+
+.turn-log-entry p {
+    white-space: pre-line;
+    color: black;
+    /* font-weight: bold; */
+    border-bottom: 2px solid black;
+    margin: 0;
+    font-size: 14px;
+    padding: 2px;
+}
+
+.turn-log-entry p.last-entry {
+    border-bottom: none;
+}
+
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.turn-log {
+    flex: 1;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    /* margin: 0; */
+    padding-top: 16px;
+
+}
+
+.turn-log-content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* .turn {
+    text-align: left;
+}
+
+.roll {
+    text-align: right;
+} */

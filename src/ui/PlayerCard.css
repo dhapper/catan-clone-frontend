@@ -11,7 +11,7 @@
 }
 
 .player-card.current-turn {
-    border-color: rgb(104, 233, 104);
+    border-color: var(--green-current);
 }
 
 .player-card.disconnected {

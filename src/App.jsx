@@ -24,6 +24,8 @@ import { ResetButton } from "./ui/ResetButton";
 import Info from "./popup/Info";
 import InfoButton from "./ui/InfoButton";
 import TurnTimerDisplay from "./ui/TurnTimerDisplay";
+import TurnLog from "./panels/TurnLog";
+import ViewSettings from "./panels/ViewSettings";
 
 
 
@@ -58,8 +60,10 @@ function App() {
     const [turnEndsAt, setTurnEndsAt] = useState(null);
     const [timerPaused, setTimerPaused] = useState(false);
     const [timerRemainingMs, setTimerRemainingMs] = useState(null);
+    const [turnLog, setTurnLog] = useState([]);
 
-    const [boardScale, setBoardScale] = useState(1);
+    const zoom = 0.9
+    const [boardScale, setBoardScale] = useState(zoom);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
 
     const myPlayer = players.find(player => player.id === myPlayerId);
@@ -98,7 +102,7 @@ function App() {
             setTurnEndsAt(data.turnEndsAt);
             setTimerPaused(data.timerPaused ?? false);
             setTimerRemainingMs(data.timerRemainingMs ?? null);
-
+            setTurnLog(data.turnLog);
 
             getGame()
                 .then((data) => {
@@ -260,7 +264,7 @@ function App() {
     }
 
     function resetBoardZoom() {
-        setBoardScale(1);
+        setBoardScale(zoom);
     }
 
     if (!board) {
@@ -491,9 +495,18 @@ function App() {
                 />
             </div>
 
-            {/* <div className="game-right">
+            <div className="game-right">
 
-                <div className="panel">
+                <TurnLog
+                    turnLog={turnLog}
+                />
+
+                <ViewSettings
+                    recenterBoard={recenterBoard}
+                    resetBoardZoom={resetBoardZoom}
+                />
+
+                {/* <div className="panel">
                     <button onClick={recenterBoard}>
                         Recenter Board
                     </button>
@@ -509,8 +522,8 @@ function App() {
                     <p>phase: {phase}</p>
                     <p>subphase: {subphase}</p>
                     <p>Player turn: {currentPlayerId}</p>
-                </div>
-            </div> */}
+                </div> */}
+            </div>
 
         </div>
     );
