@@ -30,6 +30,7 @@ import ViewSettings from "./panels/ViewSettings";
 
 
 function App() {
+    const [lobbyCode, setLobbyCode] = useState(null);
     const [board, setBoard] = useState(null);
     const [colors, setColors] = useState([]);
     const [phase, setPhase] = useState(null);
@@ -79,6 +80,8 @@ function App() {
         socket.on("game:state", (data) => {
             console.log("Game state update:", data);
 
+            setLobbyCode(data.lobbyCode);
+            console.log("Lobby code received:", data.lobbyCode);
             setColors(data.colors);
             setPhase(data.phase);
             setSubphase(data.subphase);
@@ -104,7 +107,7 @@ function App() {
             setTimerRemainingMs(data.timerRemainingMs ?? null);
             setTurnLog(data.turnLog);
 
-            getGame()
+            getGame(data.lobbyCode)
                 .then((data) => {
                     setBoard(data);
                 })
@@ -129,7 +132,11 @@ function App() {
     }, []);
 
     useEffect(() => {
-        getGame()
+        if (!lobbyCode) {
+            return;
+        }
+
+        getGame(lobbyCode)
             .then((data) => {
                 setBoard(data);
             })
@@ -170,21 +177,21 @@ function App() {
 
         try {
             if (phase === GAME_PHASES.SETUP) {
-                await buildSettlement(vertexId);
+                await buildSettlement(lobbyCode, vertexId);
 
                 console.log("SETUP SETTLEMENT BUILD REQUEST SUCCEEDED");
             } else if (
                 phase === GAME_PHASES.GAMEPLAY &&
                 buildMode === "settlement"
             ) {
-                await buildSettlement(vertexId);
+                await buildSettlement(lobbyCode, vertexId);
 
                 console.log("GAMEPLAY SETTLEMENT BUILD REQUEST SUCCEEDED");
             } else if (
                 phase === GAME_PHASES.GAMEPLAY &&
                 buildMode === "city"
             ) {
-                await buildCity(vertexId);
+                await buildCity(lobbyCode, vertexId);
 
                 console.log("CITY BUILD REQUEST SUCCEEDED");
             } else {
@@ -193,7 +200,7 @@ function App() {
 
             setBuildMode(null);
 
-            const updatedGame = await getGame();
+            const updatedGame = await getGame(lobbyCode);
             setBoard(updatedGame);
         } catch (error) {
             console.error("FAILED TO BUILD:", error);
@@ -202,9 +209,9 @@ function App() {
 
     async function handleEdgeClick(edgeId) {
         try {
-            await buildRoad(edgeId);
+            await buildRoad(lobbyCode, edgeId);
 
-            const updatedGame = await getGame();
+            const updatedGame = await getGame(lobbyCode);
             setBoard(updatedGame);
 
             const currentPlayer = updatedGame.players.find(
@@ -240,7 +247,7 @@ function App() {
     }
 
     async function resetGameNoAuth() {
-        await resetGame();
+        await resetGame(lobbyCode);
     }
 
     function handleTileClick(tileId) {
@@ -276,7 +283,7 @@ function App() {
             <div className="game-left">
 
                 {myPlayer?.isHost && (
-                    <ResetButton clicked={resetGame} />
+                    <ResetButton clicked={() => resetGame(lobbyCode)} />
                 )}
 
                 {phase != GAME_PHASES.LOBBY &&
