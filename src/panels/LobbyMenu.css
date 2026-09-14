@@ -1,0 +1,12 @@
+input {
+    width: min-content;
+    width: 100px;
+}
+
+.lobby-menu {
+    margin: 30px;
+}
+
+.lobby-menu p {
+    font-size: 12px;
+}

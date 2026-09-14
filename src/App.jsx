@@ -26,10 +26,12 @@ import InfoButton from "./ui/InfoButton";
 import TurnTimerDisplay from "./ui/TurnTimerDisplay";
 import TurnLog from "./panels/TurnLog";
 import ViewSettings from "./panels/ViewSettings";
+import LobbyMenu from "./panels/LobbyMenu";
 
 
 
 function App() {
+    const [serverConnected, setServerConnected] = useState(socket.connected);
     const [lobbyCode, setLobbyCode] = useState(null);
     const [board, setBoard] = useState(null);
     const [colors, setColors] = useState([]);
@@ -75,6 +77,12 @@ function App() {
 
         socket.on("connect", () => {
             console.log("Connected to server:", socket.id);
+            setServerConnected(true);
+        });
+
+        socket.on("disconnect", () => {
+            console.log("Disconnected from server");
+            setServerConnected(false);
         });
 
         socket.on("game:state", (data) => {
@@ -126,6 +134,7 @@ function App() {
 
         return () => {
             socket.off("connect");
+            socket.off("disconnect");
             socket.off("game:state");
             socket.off("game:sound");
         };
@@ -274,8 +283,30 @@ function App() {
         setBoardScale(zoom);
     }
 
+    if (!serverConnected) {
+        return (
+            <div className="center">
+                <div className="spinner"></div>
+                <br />
+                <div className="center-main-msg">Connecting to server...</div>
+                <br />
+                The server may take a few minutes to start.
+            </div>
+        );
+    }
+
+    if (!lobbyCode) {
+        return <LobbyMenu />;
+    }
+
     if (!board) {
-        return <div>Loading game...</div>;
+        return (
+            <div className="center">
+                <div className="spinner"></div>
+                <br />
+                <div className="center-main-msg">Loading game...</div>
+            </div>
+        );
     }
 
     return (
@@ -283,7 +314,14 @@ function App() {
             <div className="game-left">
 
                 {myPlayer?.isHost && (
-                    <ResetButton clicked={() => resetGame(lobbyCode)} />
+                    <ResetButton
+                        clicked={async () => {
+                            await resetGame(lobbyCode);
+                            setLobbyCode(null);
+                            setBoard(null);
+                            setMyPlayerId(null);
+                        }}
+                    />
                 )}
 
                 {phase != GAME_PHASES.LOBBY &&
@@ -294,6 +332,21 @@ function App() {
                             Back to lobby
                         </button>
                     )}
+
+                {!board?.players?.find(player => player.id === myPlayerId)?.isHost && (
+                    <button
+                        className="btn-blue"
+                        onClick={() => {
+                            socket.emit("lobby:exit");
+                            setLobbyCode(null);
+                            setBoard(null);
+                            setMyPlayerId(null);
+                        }}
+                    >
+                        Exit Room
+                    </button>
+                )}
+
 
                 {phase === GAME_PHASES.LOBBY && (
                     <Lobby
@@ -306,6 +359,7 @@ function App() {
                         victoryPointsNeeded={victoryPointsNeeded}
                         boardLayout={newBoardLayout}
                         pieceLimits={pieceLimits}
+                        lobbyCode={lobbyCode}
                     />
                 )}
 

@@ -1,18 +1,52 @@
+:root {
+    background-color: var(--background);
+}
+
+body {
+    background-color: var(--background);
+}
+
+
 .game-layout {
     --left-width: max(25vw, 300px);
     --right-width: max(20vw, 200px);
 
     display: grid;
     grid-template-columns:
-        var(--left-width)
-        minmax(0, 1fr)
-        var(--right-width);
+        var(--left-width) minmax(0, 1fr) var(--right-width);
 
     width: 100vw;
     height: 100vh;
     overflow: hidden;
 
     position: relative;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.center-main-msg {
+    font-weight: bold;
+}
+
+.spinner {
+    width: 30px;
+    height: 30px;
+    margin: 0 auto 15px;
+    border: 4px solid #ddd;
+    border-top: 4px solid #333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .game-left {

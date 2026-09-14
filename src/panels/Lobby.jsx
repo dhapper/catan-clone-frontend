@@ -13,7 +13,8 @@ function Lobby({
     bankResourceCount,
     victoryPointsNeeded,
     pieceLimits,
-    boardLayout
+    boardLayout,
+    lobbyCode
 }) {
     const [name, setName] = useState("");
     const [newName, setNewName] = useState("");
@@ -60,22 +61,28 @@ function Lobby({
                 <p>Lobby</p>
             </div>
 
-            <div className="player-list">
-                {players.map(player => (
-                    <div key={player.id}>
-                        <PlayerCard
-                            player={player}
-                            myPlayerId={myPlayerId}
-                        />
-
-                        {!player.connected && !myPlayerId && (
-                            <button onClick={() => claimPlayer(player.id)}>
-                                Play as {player.name}
-                            </button>
-                        )}
-                    </div>
-                ))}
+            <div className="lobby-code">
+                <span>ROOM CODE:</span> {lobbyCode}
             </div>
+
+            {players.length > 0 && (
+                <div className="player-list">
+                    {players.map(player => (
+                        <div key={player.id}>
+                            <PlayerCard
+                                player={player}
+                                myPlayerId={myPlayerId}
+                            />
+
+                            {!player.connected && !myPlayerId && (
+                                <button onClick={() => claimPlayer(player.id)}>
+                                    Play as {player.name}
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {!myPlayerId && (
                 <>
