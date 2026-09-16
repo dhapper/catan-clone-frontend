@@ -43,6 +43,11 @@ function Invention({ bank, setShowInvention }) {
         setShowInvention(false);
     }
 
+    function handleCancel() {
+        setShowInvention(false);
+        socket.emit("game:cancelInvention");
+    }
+
     return (
         <div className="popup panel">
             <h2>Invention</h2>
@@ -73,6 +78,10 @@ function Invention({ bank, setShowInvention }) {
                 disabled={!canConfirm}
             >
                 Confirm
+            </button>
+
+            <button onClick={handleCancel}>
+                Cancel
             </button>
         </div>
     );

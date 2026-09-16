@@ -158,6 +158,8 @@ function App() {
     useEffect(() => {
         setBuildMode(null);
         setShowTradeCreation(false);
+        setShowMonopoly(false);
+        setShowInvention(false);
     }, [currentPlayerId]);
 
     // for road building dev card, dont completely understand

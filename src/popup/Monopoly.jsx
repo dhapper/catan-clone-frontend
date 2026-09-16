@@ -16,6 +16,12 @@ function Monopoly({ onResourceSelect }) {
         }
     }
 
+    function handleCancel() {
+        if (onResourceSelect) {
+            onResourceSelect(null);
+        }
+    }
+
     return (
         <div className="popup panel">
             <h2>Monopoly</h2>
@@ -59,6 +65,10 @@ function Monopoly({ onResourceSelect }) {
                 />
 
             </div>
+
+            <button onClick={handleCancel}>
+                Cancel
+            </button>
         </div>
     );
 }

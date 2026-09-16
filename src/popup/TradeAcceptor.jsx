@@ -65,7 +65,7 @@ function TradeAcceptor({
 
     return (
         <div className="popup panel">
-            <h2>Trade Proposal from {currentPlayerId}</h2>
+            <h2>Trade Proposal from {player.name}</h2>
 
             <p>Wants:</p>
 
