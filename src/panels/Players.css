@@ -62,4 +62,9 @@
 
 .players{
     padding: 0px 10px;
+    /* margin-top: 4px; */
+}
+
+.player-list {
+    margin: 10px 0;
 }

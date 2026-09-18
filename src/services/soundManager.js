@@ -4,6 +4,7 @@ import placeSound from "../assets/sounds/piecemove1.mp3";
 import cardSound from "../assets/sounds/paperflip.mp3";
 import startSound from "../assets/sounds/start.wav";
 import achievementSound from "../assets/sounds/achievement.wav";
+import buttonSound from "../assets/sounds/button.mp3";
 
 const sounds = {
     diceRoll: new Audio(diceRollSound),
@@ -11,7 +12,8 @@ const sounds = {
     place: new Audio(placeSound),
     card: new Audio(cardSound),
     start: new Audio(startSound),
-    achievement: new Audio(achievementSound)
+    achievement: new Audio(achievementSound),
+    button: new Audio(buttonSound)
 };
 
 export function playSound(soundName) {

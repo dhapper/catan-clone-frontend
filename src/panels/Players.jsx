@@ -3,6 +3,7 @@ import socket from "../services/socket";
 import PlayerCard from "../ui/PlayerCard";
 import { GAME_PHASES } from "../constants/GameConstants";
 import "./Panel.css";
+import { playSound } from "../services/SoundManager";
 
 function Players({
     players,
@@ -16,6 +17,15 @@ function Players({
 
     const sortedPlayers = [...players].sort((a, b) => {
         if (phase === GAME_PHASES.SETUP) {
+            const myRolls = turnOrderRolls[myPlayerId];
+            const myHasRolled = Array.isArray(myRolls);
+
+            // Keep my player at the top until I roll.
+            if (!myHasRolled) {
+                if (a.id === myPlayerId) return -1;
+                if (b.id === myPlayerId) return 1;
+            }
+
             const aRolls = turnOrderRolls[a.id];
             const bRolls = turnOrderRolls[b.id];
 
@@ -92,7 +102,10 @@ function Players({
                                 {player.id === myPlayerId &&
                                     !turnOrderRolls[player.id] && (
                                         <button
+                                            data-no-click-sound="true"
                                             onClick={() => {
+                                                playSound("diceRoll");
+
                                                 socket.emit(
                                                     "game:rollForTurnOrder"
                                                 );

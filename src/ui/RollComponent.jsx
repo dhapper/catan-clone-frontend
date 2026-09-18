@@ -30,6 +30,7 @@ const RollComponent = ({
                 <>
                     {isMyTurn ? (
                         <button
+                            data-no-click-sound="true"
                             onClick={() => {
                                 socket.emit("game:rollProductionDice");
                             }}

@@ -183,6 +183,28 @@ function App() {
         myPlayer?.roadBuildingRemaining
     ]);
 
+    useEffect(() => {
+        function handleClick(event) {
+            const button = event.target.closest("button");
+
+            if (
+                !button ||
+                button.disabled ||
+                button.dataset.noClickSound === "true"
+            ) {
+                return;
+            }
+
+            playSound("button");
+        }
+
+        document.addEventListener("click", handleClick);
+
+        return () => {
+            document.removeEventListener("click", handleClick);
+        };
+    }, []);
+
     async function handleVertexClick(vertexId) {
         console.log("VERTEX CLICKED:", vertexId);
 
