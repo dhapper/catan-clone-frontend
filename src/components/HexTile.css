@@ -1,5 +1,5 @@
 .placeable {
-    stroke: black;
+    stroke: var(--board-outline);
     stroke-width: 4;
     cursor: pointer;
     transform-box: fill-box;

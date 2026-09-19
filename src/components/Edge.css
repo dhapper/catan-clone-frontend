@@ -4,6 +4,6 @@
 }
 
 .road {
-    stroke: black;
+    stroke: var(--piece-outline);
     stroke-width: 4;
 }

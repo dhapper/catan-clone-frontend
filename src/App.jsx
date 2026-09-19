@@ -31,6 +31,8 @@ import LobbyMenu from "./panels/LobbyMenu";
 
 
 function App() {
+    // document.documentElement.dataset.theme = "classic";
+
     const [serverConnected, setServerConnected] = useState(socket.connected);
     const [lobbyCode, setLobbyCode] = useState(null);
     const [board, setBoard] = useState(null);
@@ -68,6 +70,7 @@ function App() {
     const zoom = 0.9
     const [boardScale, setBoardScale] = useState(zoom);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
+    const [theme, setTheme] = useState("classic");
 
     const myPlayer = players.find(player => player.id === myPlayerId);
     const currentPlayer = players.find(player => player.id === currentPlayerId);
@@ -589,6 +592,8 @@ function App() {
                 <ViewSettings
                     recenterBoard={recenterBoard}
                     resetBoardZoom={resetBoardZoom}
+                    theme={theme}
+                    setTheme={setTheme}
                 />
 
                 {/* <div className="panel">

@@ -1,6 +1,6 @@
 .clickable-circle,
 .clickable-circle-inactive {
-    stroke: black;
+    stroke: var(--piece-outline);
     stroke-width: 4;
 
     transition:

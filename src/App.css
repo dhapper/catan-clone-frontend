@@ -86,7 +86,7 @@ body {
 
     position: relative;
 
-    background-image: url("./assets/backgrounds/waterbg.jpeg");
+    background-image: var(--background-water);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

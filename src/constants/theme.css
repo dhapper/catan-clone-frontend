@@ -1,16 +1,66 @@
 /* theme.css */
 
+
+/* =========================
+   Global
+   ========================= */
+
 :root {
+    /* These stay the same across themes */
     --green-hover: #79c055;
     --default-button: #e2c077;
     --red-button: #ec7c7c;
     --blue-button: #7cb6ec;
 
-    --background: #270000;
-    --accent: #ffd86e;
+    --green-current: rgb(104, 233, 104);
 
     --devCard: #4069c2;
     --svp: #4f336e;
 
-    --green-current: rgb(104, 233, 104);
+    /* resources */
+    --brick: #8a3e3e;
+    --ore: #5c4a4a;
+    --wheat: #97743e;
+    --sheep: #668128;
+    --wood: #355e3d;
+
+    /* number token */
+    --special-number: #d30000;
+    --basic-number: black;
+    --number-token-bg: #e8d5ad;
+    --number-token-border: black;
+    --number-rolled: rgb(116, 226, 116);
+}
+
+
+/* =========================
+   Themes
+   ========================= */
+
+:root,
+[data-theme="classic"] {
+    --background: #270000;
+    --accent: #ffd86e;
+
+    --board-outline: black;
+    --piece-outline: black;
+    --neutral-piece: white;
+
+    --background-water: url("../assets/backgrounds/waterbg.jpeg");
+    --sand: #c2a66b;
+
+}
+
+
+[data-theme="new"] {
+    --background: #181929;
+    --accent: white;
+
+    --board-outline: white;
+    --piece-outline: white;
+    --neutral-piece: gray;
+
+    --background-water: url("../assets/backgrounds/waterbg_dark.jpeg");
+    --sand: rgba(0, 0, 0, 0);
+
 }

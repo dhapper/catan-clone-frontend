@@ -34,6 +34,17 @@ const RESOURCE_ICONS = {
     wood: woodIcon
 };
 
+const RESOURCE_COLORS = {
+    brick: "var(--brick)",
+    ore: "var(--ore)",
+    wheat: "var(--wheat)",
+    sheep: "var(--sheep)",
+    wood: "var(--wood)",
+};
+
+const isNew =
+    document.documentElement.dataset.theme === "new";
+
 function HexTile({
     tile,
     size,
@@ -81,9 +92,9 @@ function HexTile({
 
     const bgColor =
         subphase === GAMEPLAY_SUBPHASES.ACTION &&
-        diceTotal === tile.numberToken
-            ? "rgb(116, 226, 116)"
-            : "#e8d5ad";
+            diceTotal === tile.numberToken
+            ? "var(--number-rolled)"
+            : "var(--number-token-bg)";
 
     function handleTileClick() {
         if (!canPlaceRobber) {
@@ -92,6 +103,8 @@ function HexTile({
 
         onTileClick?.(tile.id);
     }
+
+    const isNew = document.documentElement.dataset.theme === "new";
 
     return (
         <g onClick={handleTileClick}>
@@ -104,7 +117,7 @@ function HexTile({
             <polygon
                 points={points}
                 fill="lightgray"
-                stroke="black"
+                stroke="var(--board-outline)"
                 strokeWidth="10"
             />
 
@@ -118,6 +131,18 @@ function HexTile({
                 clipPath={`url(#tile-clip-${tile.id})`}
             />
 
+            {isNew && (
+                <rect
+                    x={tile.x - size}
+                    y={tile.y - size}
+                    width={size * 2}
+                    height={size * 2}
+                    fill="black"
+                    fillOpacity="0.2"
+                    clipPath={`url(#tile-clip-${tile.id})`}
+                />
+            )}
+
             {resourceIcon && (
                 <image
                     href={resourceIcon}
@@ -128,7 +153,7 @@ function HexTile({
                     preserveAspectRatio="xMidYMid meet"
                     style={{
                         filter:
-                            "brightness(0) invert(1) drop-shadow(0 0 4px rgb(0,0,0))"
+                            "brightness(0) invert(1) drop-shadow(0 0 4px black)"
                     }}
                 />
             )}
@@ -142,7 +167,7 @@ function HexTile({
                         height={size * tokenScale}
                         rx={size * tokenScale * 0.12}
                         fill={bgColor}
-                        stroke="black"
+                        stroke="var(--number-token-border)"
                         strokeWidth="4"
                     />
 
@@ -158,9 +183,9 @@ function HexTile({
                         dominantBaseline="middle"
                         fill={
                             tile.numberToken === 6 ||
-                            tile.numberToken === 8
-                                ? "#d30000"
-                                : "black"
+                                tile.numberToken === 8
+                                ? "var(--special-number)"
+                                : "var(--basic-number)"
                         }
                         fontSize={size * tokenScale * tokenFontScale}
                         fontWeight="bold"

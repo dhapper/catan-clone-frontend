@@ -224,7 +224,7 @@ function Board({
                         dx="0"
                         dy="20"
                         stdDeviation="60"
-                        floodColor="#c2a66b"
+                        floodColor="var(--sand)"
                         floodOpacity="1"
                     />
                 </filter>

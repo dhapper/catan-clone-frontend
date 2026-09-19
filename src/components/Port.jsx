@@ -61,6 +61,16 @@ function Port({ port, vertices }) {
     const offsetY =
         (normalY / normalLength) * portOffset;
 
+    const badgeOffset = 10;
+
+    const badgeX =
+        centerX + offsetX +
+        (normalX / normalLength) * badgeOffset;
+
+    const badgeY =
+        centerY + offsetY +
+        (normalY / normalLength) * badgeOffset;
+
     return (
 
         <>
@@ -76,7 +86,7 @@ function Port({ port, vertices }) {
                     height="120"
                     rx="3"
                     fill="#534433"
-                    stroke="black"
+                    stroke="var(--board-outline)"
                     strokeWidth="5"
                 />
             </g>
@@ -84,7 +94,7 @@ function Port({ port, vertices }) {
 
             <g
                 className="port"
-                transform={`translate(${centerX + offsetX}, ${centerY + offsetY})`}
+                transform={`translate(${badgeX}, ${badgeY})`}
             >
                 <PortBadge port={port} />
             </g>

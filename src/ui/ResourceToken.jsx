@@ -29,11 +29,11 @@ const RESOURCE_BACKGROUNDS = {
 };
 
 const RESOURCE_COLORS = {
-    brick: '#8a3e3e',
-    ore: '#5c4a4a',
-    wheat: '#97743e',
-    sheep: '#668128',
-    wood: '#355e3d',
+    brick: "var(--brick)",
+    ore: "var(--ore)",
+    wheat: "var(--wheat)",
+    sheep: "var(--sheep)",
+    wood: "var(--wood)",
 };
 
 function ResourceToken({

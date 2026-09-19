@@ -1,4 +1,4 @@
-import robberIcon from "../assets/icons/other/pawn.svg";
+import robberIcon from "../assets/icons/other/thief.svg";
 import "./ClickableCircle.css";
 
 function Robber({
@@ -10,13 +10,7 @@ function Robber({
     onClick
 }) {
 
-    // if (visible) {
-    //     console.log("VISIBLE ROBBER:", {
-    //         visible,
-    //         x,
-    //         y
-    //     });
-    // }
+    const isNew = document.documentElement.dataset.theme === "new";
 
     return (
         <g>
@@ -36,48 +30,6 @@ function Robber({
                 onClick={canPlace ? onClick : undefined}
             />
 
-            <defs>
-                <filter
-                    id={`robber-outline-${x}-${y}`}
-                    x="-50%"
-                    y="-50%"
-                    width="200%"
-                    height="200%"
-                >
-                    <feMorphology
-                        in="SourceAlpha"
-                        operator="dilate"
-                        radius="3"
-                        result="expanded"
-                    />
-
-                    <feFlood
-                        floodColor="black"
-                        result="color"
-                    />
-
-                    <feComposite
-                        in="color"
-                        in2="expanded"
-                        operator="in"
-                        result="outline"
-                    />
-
-                    <feDropShadow
-                        dx="2"
-                        dy="2"
-                        stdDeviation="2"
-                        floodColor="black"
-                        floodOpacity="0.7"
-                    />
-
-                    <feMerge>
-                        <feMergeNode in="outline" />
-                        <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                </filter>
-            </defs>
-
             {visible && (
                 <image
                     href={robberIcon}
@@ -86,10 +38,12 @@ function Robber({
                     width={size * 0.5}
                     height={size * 0.5}
                     preserveAspectRatio="xMidYMid meet"
-                    filter={`url(#robber-outline-${x}-${y})`}
                     style={{
                         pointerEvents: "none",
-                        userSelect: "none"
+                        userSelect: "none",
+                        filter: isNew
+                            ? "brightness(0) invert(1) drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7))"
+                            : "drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.7))"
                     }}
                 />
             )}

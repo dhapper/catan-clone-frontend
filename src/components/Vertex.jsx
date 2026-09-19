@@ -13,7 +13,7 @@ function Vertex({
     buildMode,
     onVertexClick
 }) {
-    let fill = "white";
+    let fill = "var(--neutral-piece)";
 
     const isSetupSettlementPhase =
         subphase === SETUP_SUBPHASES.PLACING_SETTLEMENT;
@@ -29,15 +29,15 @@ function Vertex({
         buildMode === "city" &&
         buildableCities.includes(vertex.id);
 
-    // Show valid city upgrades as white.
+    // Show valid city upgrades as neutral color.
     if (isCityBuildable) {
-        fill = "white";
+        fill = "var(--neutral-piece)";
     } else if (vertex.building) {
         const owner = players.find(
             player => player.id === vertex.building.playerId
         );
 
-        fill = owner?.color ?? "white";
+        fill = owner?.color ?? "var(--neutral-piece)";
     }
 
     const isBuildable =

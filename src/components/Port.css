@@ -1,6 +1,6 @@
 .port-background {
     fill: #382c22;
-    stroke: black;
+    stroke: var(--board-outline);
     stroke-width: 4px;
 }
 

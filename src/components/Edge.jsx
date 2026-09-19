@@ -1,6 +1,5 @@
 import "./Edge.css";
 import "./ClickableCircle.css";
-import { playSound } from "../services/soundManager";
 
 function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) {
     const vertexA = vertices.find(
@@ -17,14 +16,14 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
     const isBuildable =
         buildableRoads.includes(edge.id);
 
-    let fill = "white";
+    let fill = "var(--neutral-piece)";
 
     if (edge.road) {
         const owner = players.find(
             player => player.id === edge.road.playerId
         );
 
-        fill = owner?.color ?? "white";
+        fill = owner?.color ?? "var(--neutral-piece)";
     }
 
     // show nothing by default
