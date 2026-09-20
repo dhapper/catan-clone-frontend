@@ -3,7 +3,7 @@ import socket from "../services/socket";
 import PlayerCard from "../ui/PlayerCard";
 import { GAME_PHASES } from "../constants/GameConstants";
 import "./Panel.css";
-import { playSound } from "../services/SoundManager";
+import { playSound } from "../services/soundManager";
 
 function Players({
     players,
