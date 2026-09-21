@@ -72,6 +72,7 @@ function App() {
     const [boardScale, setBoardScale] = useState(zoom);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
     const [theme, setTheme] = useState("classic");
+    const [rightPanelOpen, setRightPanelOpen] = useState(true);
 
     const myPlayer = players.find(player => player.id === myPlayerId);
     const currentPlayer = players.find(player => player.id === currentPlayerId);
@@ -313,7 +314,7 @@ function App() {
     }
 
     if (!serverConnected) {
-        return <ConnectingToServerScreen/>;
+        return <ConnectingToServerScreen />;
     }
 
     if (!lobbyCode) {
@@ -321,11 +322,11 @@ function App() {
     }
 
     if (!board) {
-        return <LoadingScreen/>;
+        return <LoadingScreen />;
     }
 
     return (
-        <div className="game-layout">
+        <div className={`game-layout ${rightPanelOpen ? "right-open" : "right-closed"}`}>
             <div className="game-left">
 
                 {myPlayer?.isHost && (
@@ -571,36 +572,38 @@ function App() {
                 />
             </div>
 
-            <div className="game-right">
+            <div className={`game-right ${rightPanelOpen ? "open" : "closed"}`}>
 
-                <TurnLog
-                    turnLog={turnLog}
-                />
+                <button
+                    className="right-panel-toggle"
+                    onClick={() => {
+                        if (rightPanelOpen) {
+                            playSound("close");
+                        } else {
+                            playSound("open");
+                        }
 
-                <ViewSettings
-                    recenterBoard={recenterBoard}
-                    resetBoardZoom={resetBoardZoom}
-                    theme={theme}
-                    setTheme={setTheme}
-                />
+                        setRightPanelOpen(!rightPanelOpen);
+                    }}
+                    aria-label={rightPanelOpen ? "Collapse panel" : "Expand panel"}
+                    data-no-click-sound="true"
+                >
+                    {rightPanelOpen ? "⟩⟩" : "⟨⟨"}
+                </button>
 
-                {/* <div className="panel">
-                    <button onClick={recenterBoard}>
-                        Recenter Board
-                    </button>
+                <div className="right-panel-content">
+                    <TurnLog
+                        turnLog={turnLog}
+                    />
 
-                    <button onClick={resetBoardZoom}>
-                        Normal Zoom
-                    </button>
+                    <ViewSettings
+                        recenterBoard={recenterBoard}
+                        resetBoardZoom={resetBoardZoom}
+                        theme={theme}
+                        setTheme={setTheme}
+                    />
                 </div>
 
-                <div className="panel">
-                    <h1>Hexland</h1>
-
-                    <p>phase: {phase}</p>
-                    <p>subphase: {subphase}</p>
-                    <p>Player turn: {currentPlayerId}</p>
-                </div> */}
             </div>
 
         </div>
