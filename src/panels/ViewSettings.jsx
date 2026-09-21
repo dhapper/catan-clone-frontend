@@ -26,7 +26,7 @@ function ViewSettings({ recenterBoard, resetBoardZoom, theme, setTheme }) {
                 Reset Zoom
             </button>
 
-            <div className="toggle-row">
+            <div className="theme-toggle">
                 <span>Experimental Theme</span>
 
                 <button

@@ -7,10 +7,13 @@ function Robber({
     size,
     canPlace,
     visible,
-    onClick
+    onClick,
+    tileType
 }) {
 
     const isNew = document.documentElement.dataset.theme === "new";
+    const isMountain = tileType === "mountain";
+    const isWhite = isNew || isMountain;
 
     return (
         <g>
@@ -41,7 +44,7 @@ function Robber({
                     style={{
                         pointerEvents: "none",
                         userSelect: "none",
-                        filter: isNew
+                        filter: isWhite
                             ? "brightness(0) invert(1) drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.7))"
                             : "drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.7))"
                     }}

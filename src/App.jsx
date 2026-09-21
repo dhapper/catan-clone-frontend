@@ -26,8 +26,9 @@ import InfoButton from "./ui/InfoButton";
 import TurnTimerDisplay from "./ui/TurnTimerDisplay";
 import TurnLog from "./panels/TurnLog";
 import ViewSettings from "./panels/ViewSettings";
-import LobbyMenu from "./panels/LobbyMenu";
-
+import TitleScreen from "./ui/TitleScreen";
+import ConnectingToServerScreen from "./ui/ConnectingToServerScreen";
+import LoadingScreen from "./ui/LoadingScreen";
 
 
 function App() {
@@ -120,6 +121,7 @@ function App() {
 
             getGame(data.lobbyCode)
                 .then((data) => {
+                    // console.log(JSON.stringify(data.tiles.slice(8), null, 4));
                     setBoard(data);
                 })
                 .catch((error) => {
@@ -311,29 +313,15 @@ function App() {
     }
 
     if (!serverConnected) {
-        return (
-            <div className="center">
-                <div className="spinner"></div>
-                <br />
-                <div className="center-main-msg">Connecting to server...</div>
-                <br />
-                The server may take a few minutes to start.
-            </div>
-        );
+        return <ConnectingToServerScreen/>;
     }
 
     if (!lobbyCode) {
-        return <LobbyMenu />;
+        return <TitleScreen />;
     }
 
     if (!board) {
-        return (
-            <div className="center">
-                <div className="spinner"></div>
-                <br />
-                <div className="center-main-msg">Loading game...</div>
-            </div>
-        );
+        return <LoadingScreen/>;
     }
 
     return (

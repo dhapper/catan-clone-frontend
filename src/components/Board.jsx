@@ -24,7 +24,8 @@ function Board({
     setBoardScale,
     boardPan,
     setBoardPan,
-    robberTileId
+    robberTileId,
+    background = false
 }) {
     const HEX_SIZE = board.hexSize;
 
@@ -86,6 +87,10 @@ function Board({
     const ZOOM_STEP = 0.1;
 
     function handleWheel(event) {
+        if (background) {
+            return;
+        }
+
         event.preventDefault();
 
         const svg = event.currentTarget;
@@ -143,6 +148,10 @@ function Board({
     }
 
     function handleMouseDown(event) {
+        if (background) {
+            return;
+        }
+
         if (event.button !== 0) {
             return;
         }
@@ -162,6 +171,10 @@ function Board({
     }
 
     function handleMouseMove(event) {
+        if (background) {
+            return;
+        }
+
         if (!isDragging.current) {
             return;
         }
@@ -182,10 +195,18 @@ function Board({
     }
 
     function handleMouseUp() {
+        if (background) {
+            return;
+        }
+
         isDragging.current = false;
     }
 
     function handleClickCapture(event) {
+        if (background) {
+            return;
+        }
+
         if (didDrag.current) {
             event.preventDefault();
             event.stopPropagation();
@@ -261,6 +282,7 @@ function Board({
                         canPlaceRobber={canPlaceRobber}
                         robberTileId={robberTileId}
                         onTileClick={onTileClick}
+                        background={background}
                     />
                 ))}
 

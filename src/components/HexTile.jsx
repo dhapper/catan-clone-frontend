@@ -52,7 +52,8 @@ function HexTile({
     subphase,
     canPlaceRobber,
     robberTileId,
-    onTileClick
+    onTileClick,
+    background
 }) {
     const iconYOffset = -0.6;
     const iconScale = 0.6;
@@ -143,7 +144,7 @@ function HexTile({
                 />
             )}
 
-            {resourceIcon && (
+            {resourceIcon && !background && (
                 <image
                     href={resourceIcon}
                     x={tile.x - size * iconScale / 2}
@@ -158,7 +159,7 @@ function HexTile({
                 />
             )}
 
-            {tile.numberToken !== null && (
+            {tile.numberToken !== null && !background && (
                 <>
                     <rect
                         x={tile.x - size * tokenScale / 2}
@@ -206,6 +207,7 @@ function HexTile({
                 // canPlace={canPlaceRobber}
                 canPlace={canPlaceRobber && robberTileId !== tile.id}
                 visible={robberTileId === tile.id}
+                tileType={tile.type}
             />
         </g>
     );

@@ -39,7 +39,7 @@ function LobbyMenu({}) {
     }, [lobbyCode]);
 
     return (
-        <div className="panel popup lobby-menu">
+        <div className="panel lobby-menu">
 
             <div className="header">
                 <p>Lobby Menu</p>
