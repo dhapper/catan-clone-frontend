@@ -4,6 +4,7 @@ import mountainBg from "../assets/tileBg/mountain.jpg";
 import pastureBg from "../assets/tileBg/pasture.jpg";
 import fieldBg from "../assets/tileBg/field.jpg";
 import forestBg from "../assets/tileBg/forest.jpg";
+import waterBg from "../assets/tileBg/waterTile.jpg";
 
 import brickIcon from "../assets/icons/transparent_res/brick-pile.svg";
 import sheepIcon from "../assets/icons/transparent_res/sheep.svg";
@@ -23,7 +24,8 @@ const TILE_BACKGROUNDS = {
     mountain: mountainBg,
     pasture: pastureBg,
     field: fieldBg,
-    forest: forestBg
+    forest: forestBg,
+    water: waterBg
 };
 
 const RESOURCE_ICONS = {

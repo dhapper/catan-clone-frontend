@@ -36,6 +36,7 @@ function App() {
 
     const [serverConnected, setServerConnected] = useState(socket.connected);
     const [lobbyCode, setLobbyCode] = useState(null);
+    const [config, setConfig] = useState(null);
     const [board, setBoard] = useState(null);
     const [colors, setColors] = useState([]);
     const [phase, setPhase] = useState(null);
@@ -72,7 +73,7 @@ function App() {
     const [boardScale, setBoardScale] = useState(zoom);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
     const [theme, setTheme] = useState("classic");
-    const [rightPanelOpen, setRightPanelOpen] = useState(true);
+    const [rightPanelOpen, setRightPanelOpen] = useState(false);
 
     const myPlayer = players.find(player => player.id === myPlayerId);
     const currentPlayer = players.find(player => player.id === currentPlayerId);
@@ -95,6 +96,7 @@ function App() {
 
             setLobbyCode(data.lobbyCode);
             console.log("Lobby code received:", data.lobbyCode);
+            setConfig(data.config);
             setColors(data.colors);
             setPhase(data.phase);
             setSubphase(data.subphase);
@@ -376,6 +378,7 @@ function App() {
                         boardLayout={newBoardLayout}
                         pieceLimits={pieceLimits}
                         lobbyCode={lobbyCode}
+                        config={config}
                     />
                 )}
 

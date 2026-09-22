@@ -14,7 +14,8 @@ function Lobby({
     victoryPointsNeeded,
     pieceLimits,
     boardLayout,
-    lobbyCode
+    lobbyCode,
+    config
 }) {
     const [name, setName] = useState("");
     const [newName, setNewName] = useState("");
@@ -159,6 +160,20 @@ function Lobby({
                                 }
                             >
                                 Reroll Board
+                            </button>
+
+                            <button
+                                onClick={() =>
+                                    socket.emit(
+                                        "game:setExpansion",
+                                        {
+                                            expansion: "seafarers",
+                                            enabled: !config?.expansions?.seafarers
+                                        }
+                                    )
+                                }
+                            >
+                                Seafarers: {config?.expansions?.seafarers ? "ON" : "OFF"}
                             </button>
                         </div>
 

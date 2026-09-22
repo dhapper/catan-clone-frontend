@@ -9,80 +9,78 @@ function Port({ port, vertices }) {
         vertex => vertex.id === port.vertices[1]
     );
 
+    if (!vertexA || !vertexB) {
+        return null;
+    }
+
     const centerX =
         (vertexA.x + vertexB.x) / 2;
 
     const centerY =
         (vertexA.y + vertexB.y) / 2;
 
-    // Edge direction
-    const edgeX = vertexB.x - vertexA.x;
-    const edgeY = vertexB.y - vertexA.y;
+    // Direction outward from the hex for each side
+    const sideAngles = [
+        -60,
+        0,
+        60,
+        120,
+        180,
+        240
+    ];
 
-    // Perpendicular direction
-    let normalX = -edgeY;
-    let normalY = edgeX;
+    const normalAngle =
+        sideAngles[port.side];
 
-    // Rectangle angle: perpendicular to edge
-    const angle =
-        Math.atan2(edgeY, edgeX) * (180 / Math.PI) + 90;
+    const normalRadians =
+        normalAngle * Math.PI / 180;
 
-    // Make the normal point away from the board center
-    const boardCenterX =
-        vertices.reduce((sum, vertex) => sum + vertex.x, 0) /
-        vertices.length;
+    const normalX =
+        Math.cos(normalRadians);
 
-    const boardCenterY =
-        vertices.reduce((sum, vertex) => sum + vertex.y, 0) /
-        vertices.length;
+    const normalY =
+        Math.sin(normalRadians);
 
-    const toPortX = centerX - boardCenterX;
-    const toPortY = centerY - boardCenterY;
-
-    if (
-        normalX * toPortX +
-        normalY * toPortY < 0
-    ) {
-        normalX = -normalX;
-        normalY = -normalY;
-    }
-
-    const normalLength =
-        Math.sqrt(
-            normalX * normalX +
-            normalY * normalY
-        );
-
+    // Keep the same translation distance
     const portOffset = 60;
 
     const offsetX =
-        (normalX / normalLength) * portOffset;
+        normalX * portOffset;
 
     const offsetY =
-        (normalY / normalLength) * portOffset;
+        normalY * portOffset;
 
-    const badgeOffset = 10;
+    const portX =
+        centerX + offsetX;
+
+    const portY =
+        centerY + offsetY;
+
+    // Dock rotation is perpendicular to the side
+    const angle =
+        normalAngle + 180;
+
+    const badgeOffset = -25;
 
     const badgeX =
-        centerX + offsetX +
-        (normalX / normalLength) * badgeOffset;
+        portX + normalX * badgeOffset;
 
     const badgeY =
-        centerY + offsetY +
-        (normalY / normalLength) * badgeOffset;
+        portY + normalY * badgeOffset;
 
     return (
-
         <>
-
             <g
                 className="port"
-                transform={`translate(${centerX + offsetX}, ${centerY + offsetY}) rotate(${angle})`}
+                transform={`
+                    translate(${portX}, ${portY})
+                    rotate(${angle})
+                `}
             >
                 <rect
-                    x="10"
-                    y="-60 "
-                    width="50"
+                    x="30"
+                    y="-60"
+                    width="30"
                     height="120"
                     rx="3"
                     fill="#534433"
@@ -91,14 +89,15 @@ function Port({ port, vertices }) {
                 />
             </g>
 
-
             <g
                 className="port"
                 transform={`translate(${badgeX}, ${badgeY})`}
             >
-                <PortBadge port={port} />
+                <PortBadge
+                    port={port}
+                    size={35}
+                />
             </g>
-
         </>
     );
 }

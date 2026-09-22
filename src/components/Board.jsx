@@ -233,7 +233,7 @@ function Board({
             }}
         >
 
-            <defs>
+            {/* <defs>
                 <filter
                     id="island-shadow"
                     x="-50%"
@@ -249,7 +249,7 @@ function Board({
                         floodOpacity="1"
                     />
                 </filter>
-            </defs>
+            </defs> */}
 
             <g
                 filter="url(#island-shadow)"
@@ -262,14 +262,14 @@ function Board({
                 `}
             >
 
-                {/* Ports */}
+                {/* Ports
                 {board.ports.map((port) => (
                     <Port
                         key={port.edgeId}
                         port={port}
                         vertices={board.vertices}
                     />
-                ))}
+                ))} */}
 
                 {/* Hex tiles */}
                 {board.tiles.map((tile) => (
@@ -283,6 +283,16 @@ function Board({
                         robberTileId={robberTileId}
                         onTileClick={onTileClick}
                         background={background}
+                    />
+                ))}
+
+                {/* Ports */}
+                {board.ports.map((port) => (
+                    <Port
+                        key={port.edgeId}
+                        port={port}
+                        vertices={board.vertices}
+                        tiles={board.tiles}
                     />
                 ))}
 
