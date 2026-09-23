@@ -25,6 +25,7 @@ function Board({
     boardPan,
     setBoardPan,
     robberTileId,
+    pirateTileId,
     background = false
 }) {
     const HEX_SIZE = board.hexSize;
@@ -281,6 +282,7 @@ function Board({
                         subphase={subphase}
                         canPlaceRobber={canPlaceRobber}
                         robberTileId={robberTileId}
+                        pirateTileId={pirateTileId}
                         onTileClick={onTileClick}
                         background={background}
                     />

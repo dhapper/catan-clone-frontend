@@ -54,6 +54,7 @@ function App() {
     const [showTradeCreation, setShowTradeCreation] = useState(false);
     const [discardRequirements, setDiscardRequirements] = useState({});
     const [robberTileId, setRobberTileId] = useState(null);
+    const [pirateTileId, setPirateTileId] = useState(null);
     const [robberVictims, setRobberVictims] = useState([]);
     const [showMonopoly, setShowMonopoly] = useState(false);
     const [showInvention, setShowInvention] = useState(false);
@@ -110,6 +111,7 @@ function App() {
             setCurrentTrade(data.currentTrade);
             setDiscardRequirements(data.discardRequirements ?? {});
             setRobberTileId(data.robberTileId);
+            setPirateTileId(data.pirateTileId);
             setRobberVictims(data.robberVictims ?? []);
             setRobberSafetyNumber(data.robberSafetyNumber);
             setBankResourceCount(data.bankResourceCount);
@@ -292,12 +294,32 @@ function App() {
         await resetGame(lobbyCode);
     }
 
-    function handleTileClick(tileId) {
+    function handleTileClick(tileId, tileType) {
+        console.log("TILE CLICK DATA:", {
+            tileId,
+            tileType
+        });
+
+        // rest of function...
         if (
             phase !== GAME_PHASES.GAMEPLAY ||
             subphase !== GAMEPLAY_SUBPHASES.ROBBER_PLACEMENT ||
             currentPlayerId !== myPlayerId
         ) {
+            return;
+        }
+
+        if (tileType === "water") {
+            if (!config?.expansions?.seafarers) {
+                return;
+            }
+
+            console.log("PIRATE TILE CLICKED:", tileId);
+
+            socket.emit("game:movePirate", {
+                tileId
+            });
+
             return;
         }
 
@@ -579,6 +601,7 @@ function App() {
                     boardPan={boardPan}
                     setBoardPan={setBoardPan}
                     robberTileId={robberTileId}
+                    pirateTileId={pirateTileId}
                 />
             </div>
 

@@ -17,6 +17,7 @@ import Robber from "./Robber";
 import { GAMEPLAY_SUBPHASES } from "../constants/GameConstants";
 
 import "./HexTile.css";
+import Pirate from "./Pirate";
 
 const TILE_BACKGROUNDS = {
     desert: desertBg,
@@ -54,6 +55,7 @@ function HexTile({
     subphase,
     canPlaceRobber,
     robberTileId,
+    pirateTileId,
     onTileClick,
     background
 }) {
@@ -104,7 +106,7 @@ function HexTile({
             return;
         }
 
-        onTileClick?.(tile.id);
+        onTileClick?.(tile.id, tile.type);
     }
 
     const isNew = document.documentElement.dataset.theme === "new";
@@ -202,15 +204,29 @@ function HexTile({
                 </>
             )}
 
-            <Robber
-                x={tile.x}
-                y={tile.y}
-                size={size}
-                // canPlace={canPlaceRobber}
-                canPlace={canPlaceRobber && robberTileId !== tile.id}
-                visible={robberTileId === tile.id}
-                tileType={tile.type}
-            />
+            {tile.type != "water" && (
+                <Robber
+                    x={tile.x}
+                    y={tile.y}
+                    size={size}
+                    // canPlace={canPlaceRobber}
+                    canPlace={canPlaceRobber && robberTileId !== tile.id}
+                    visible={robberTileId === tile.id}
+                    tileType={tile.type}
+                />
+            )}
+
+            {tile.type === "water" && (
+                <Pirate
+                    x={tile.x}
+                    y={tile.y}
+                    size={size / 2}
+                    canPlace={canPlaceRobber && pirateTileId !== tile.id}
+                    visible={pirateTileId === tile.id}
+                    tileType={tile.type}
+                />
+            )}
+
         </g>
     );
 }
