@@ -29,6 +29,7 @@ import ViewSettings from "./panels/ViewSettings";
 import TitleScreen from "./ui/TitleScreen";
 import ConnectingToServerScreen from "./ui/ConnectingToServerScreen";
 import LoadingScreen from "./ui/LoadingScreen";
+import SeafarerSettings from "./panels/SeafarerSettings";
 
 
 function App() {
@@ -367,19 +368,25 @@ function App() {
 
 
                 {phase === GAME_PHASES.LOBBY && (
-                    <Lobby
-                        players={players}
-                        colors={colors}
-                        myPlayerId={myPlayerId}
-                        phase={phase}
-                        robberSafetyNumber={robberSafetyNumber}
-                        bankResourceCount={bankResourceCount}
-                        victoryPointsNeeded={victoryPointsNeeded}
-                        boardLayout={newBoardLayout}
-                        pieceLimits={pieceLimits}
-                        lobbyCode={lobbyCode}
-                        config={config}
-                    />
+                    <>
+                        <Lobby
+                            players={players}
+                            colors={colors}
+                            myPlayerId={myPlayerId}
+                            phase={phase}
+                            robberSafetyNumber={robberSafetyNumber}
+                            bankResourceCount={bankResourceCount}
+                            victoryPointsNeeded={victoryPointsNeeded}
+                            boardLayout={newBoardLayout}
+                            pieceLimits={pieceLimits}
+                            lobbyCode={lobbyCode}
+                            config={config}
+                        />
+
+                        {myPlayer?.isHost && config?.expansions?.seafarers && (
+                            <SeafarerSettings config={config} />
+                        )}
+                    </>
                 )}
 
                 {(phase === GAME_PHASES.SETUP || phase === GAME_PHASES.GAMEPLAY) && (
