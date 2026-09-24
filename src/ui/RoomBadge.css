@@ -1,0 +1,23 @@
+.room-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background-color: #000000;
+    border: 2px solid white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.room-badge-label {
+    font-size: 12px;
+    opacity: 0.7;
+    text-transform: uppercase;
+}
+
+.room-badge-code {
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}

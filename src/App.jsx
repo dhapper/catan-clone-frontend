@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getGame, buildSettlement, buildRoad, buildCity, resetGame } from "./api/gameApi";
 import { SETUP_SUBPHASES, GAME_PHASES, GAMEPLAY_SUBPHASES } from "./constants/GameConstants";
 import socket from "./services/socket";
@@ -19,7 +19,31 @@ import Invention from "./popup/Invention";
 import GameOver from "./popup/GameOver";
 import { playSound } from "./services/soundManager";
 import TopRight from "./ui/ResetButton";
+import Home from "./panels/Home";
+import RoomBadge from "./ui/RoomBadge";
+
+function getRoomCodeFromUrl() {
+    return new URLSearchParams(window.location.search).get("room")?.toUpperCase() || null;
+}
+
+function setRoomCodeInUrl(code) {
+    const url = new URL(window.location.href);
+
+    if (code) {
+        url.searchParams.set("room", code);
+    } else {
+        url.searchParams.delete("room");
+    }
+
+    window.history.replaceState(null, "", url);
+}
+
 function App() {
+    const [roomCode, setRoomCode] = useState(null);
+    const [roomError, setRoomError] = useState(null);
+    // Room to (re)join whenever the socket connects: the joined room,
+    // or the one from the URL on first load
+    const roomCodeRef = useRef(getRoomCodeFromUrl());
     const [board, setBoard] = useState(null);
     const [colors, setColors] = useState([]);
     const [phase, setPhase] = useState(null);
@@ -54,8 +78,42 @@ function App() {
     useEffect(() => {
         console.log("Setting up players:update listener");
 
+        function rejoinRoom() {
+            if (roomCodeRef.current) {
+                socket.emit("room:join", {
+                    code: roomCodeRef.current
+                });
+            }
+        }
+
         socket.on("connect", () => {
             console.log("Connected to server:", socket.id);
+
+            // A reconnected socket is a new socket on the server,
+            // so it has to join the room again
+            rejoinRoom();
+        });
+
+        if (socket.connected) {
+            rejoinRoom();
+        }
+
+        socket.on("room:joined", ({ code }) => {
+            roomCodeRef.current = code;
+            setRoomCode(code);
+            setRoomError(null);
+            setRoomCodeInUrl(code);
+
+            // Any player we controlled was released when our old socket left
+            setMyPlayerId(null);
+        });
+
+        socket.on("room:error", ({ error }) => {
+            roomCodeRef.current = null;
+            setRoomCode(null);
+            setBoard(null);
+            setRoomError(error);
+            setRoomCodeInUrl(null);
         });
 
         socket.on("game:state", (data) => {
@@ -81,7 +139,7 @@ function App() {
             setWinner(data.winner);
             setSetupTurnOrder(data.setupTurnOrder ?? []);
 
-            getGame()
+            getGame(roomCodeRef.current)
                 .then((data) => {
                     setBoard(data);
                 })
@@ -100,19 +158,12 @@ function App() {
 
         return () => {
             socket.off("connect");
+            socket.off("room:joined");
+            socket.off("room:error");
             socket.off("game:state");
+            socket.off("player:claimed");
             socket.off("game:sound");
         };
-    }, []);
-
-    useEffect(() => {
-        getGame()
-            .then((data) => {
-                setBoard(data);
-            })
-            .catch((error) => {
-                console.error("Failed to load game:", error);
-            });
     }, []);
 
     // when turn changes
@@ -147,21 +198,21 @@ function App() {
 
         try {
             if (phase === GAME_PHASES.SETUP) {
-                await buildSettlement(vertexId);
+                await buildSettlement(roomCode, vertexId);
 
                 console.log("SETUP SETTLEMENT BUILD REQUEST SUCCEEDED");
             } else if (
                 phase === GAME_PHASES.GAMEPLAY &&
                 buildMode === "settlement"
             ) {
-                await buildSettlement(vertexId);
+                await buildSettlement(roomCode, vertexId);
 
                 console.log("GAMEPLAY SETTLEMENT BUILD REQUEST SUCCEEDED");
             } else if (
                 phase === GAME_PHASES.GAMEPLAY &&
                 buildMode === "city"
             ) {
-                await buildCity(vertexId);
+                await buildCity(roomCode, vertexId);
 
                 console.log("CITY BUILD REQUEST SUCCEEDED");
             } else {
@@ -170,7 +221,7 @@ function App() {
 
             setBuildMode(null);
 
-            const updatedGame = await getGame();
+            const updatedGame = await getGame(roomCode);
             setBoard(updatedGame);
         } catch (error) {
             console.error("FAILED TO BUILD:", error);
@@ -179,9 +230,9 @@ function App() {
 
     async function handleEdgeClick(edgeId) {
         try {
-            await buildRoad(edgeId);
+            await buildRoad(roomCode, edgeId);
 
-            const updatedGame = await getGame();
+            const updatedGame = await getGame(roomCode);
             setBoard(updatedGame);
 
             const currentPlayer = updatedGame.players.find(
@@ -216,8 +267,14 @@ function App() {
         }
     }
 
-    async function resetGameNoAuth() {
-        await resetGame();
+    function leaveRoom() {
+        socket.emit("room:leave");
+
+        roomCodeRef.current = null;
+        setRoomCode(null);
+        setBoard(null);
+        setMyPlayerId(null);
+        setRoomCodeInUrl(null);
     }
 
     function handleTileClick(tileId) {
@@ -244,13 +301,25 @@ function App() {
         setBoardScale(1);
     }
 
+    if (!roomCode) {
+        return (
+            <Home
+                initialCode={getRoomCodeFromUrl()}
+                error={roomError}
+            />
+        );
+    }
+
     if (!board) {
         return <div>Loading game...</div>;
     }
 
     return (
         <div className="game-layout">
-            <TopRight clicked={resetGame} />
+            <div className="top-right-bar">
+                <RoomBadge code={roomCode} onLeave={leaveRoom} />
+                <TopRight clicked={() => resetGame(roomCode)} />
+            </div>
             <div className="game-left">
 
                 {phase != GAME_PHASES.LOBBY &&

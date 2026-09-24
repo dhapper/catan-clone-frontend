@@ -1,7 +1,11 @@
 const API_URL = `${import.meta.env.VITE_BACKEND_URL}/api`;
 
-export async function getGame() {
-    const response = await fetch(`${API_URL}/game`);
+function roomUrl(roomCode) {
+    return `${API_URL}/rooms/${encodeURIComponent(roomCode)}`;
+}
+
+export async function getGame(roomCode) {
+    const response = await fetch(`${roomUrl(roomCode)}/game`);
 
     if (!response.ok) {
         throw new Error("Failed to fetch game");
@@ -10,9 +14,9 @@ export async function getGame() {
     return response.json();
 }
 
-export async function buildSettlement(vertexId) {
+export async function buildSettlement(roomCode, vertexId) {
     const response = await fetch(
-        `${API_URL}/game/build/settlement`,
+        `${roomUrl(roomCode)}/game/build/settlement`,
         {
             method: "POST",
             headers: {
@@ -34,9 +38,9 @@ export async function buildSettlement(vertexId) {
     return response.json();
 }
 
-export async function resetGame() {
+export async function resetGame(roomCode) {
     const response = await fetch(
-        `${API_URL}/game/reset`,
+        `${roomUrl(roomCode)}/game/reset`,
         {
             method: "POST",
             headers: {
@@ -55,9 +59,9 @@ export async function resetGame() {
     return response.json();
 }
 
-export async function buildRoad(edgeId) {
+export async function buildRoad(roomCode, edgeId) {
     const response = await fetch(
-        `${API_URL}/game/build/road`,
+        `${roomUrl(roomCode)}/game/build/road`,
         {
             method: "POST",
             headers: {
@@ -79,9 +83,9 @@ export async function buildRoad(edgeId) {
     return response.json();
 }
 
-export async function buildCity(vertexId) {
+export async function buildCity(roomCode, vertexId) {
     const response = await fetch(
-        `${API_URL}/game/build/city`,
+        `${roomUrl(roomCode)}/game/build/city`,
         {
             method: "POST",
             headers: {
