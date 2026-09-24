@@ -20,7 +20,8 @@ export const GAMEPLAY_SUBPHASES = Object.freeze({
 export const STRUCTURES = Object.freeze({
     ROAD: "road",
     SETTLEMENT: "settlement",
-    CITY: "city"
+    CITY: "city",
+    SHIP: "ship"
 });
 
 export const SPECIAL_VICTORY_POINTS = Object.freeze({
@@ -45,7 +46,7 @@ export const SEAFARERS_MAPS = {
         id: "THE_FOUR_ISLANDS_II",
         name: "The Four Islands II"
     },
-    
+
     THE_SIX_ISLANDS: {
         id: "THE_SIX_ISLANDS",
         name: "The Six Islands"

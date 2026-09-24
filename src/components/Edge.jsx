@@ -1,7 +1,7 @@
 import "./Edge.css";
 import "./ClickableCircle.css";
 
-function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) {
+function Edge({ edge, vertices, radius, players, buildableRoads, buildableShips, onEdgeClick }) {
     const vertexA = vertices.find(
         vertex => vertex.id === edge.vertices[0]
     );
@@ -14,7 +14,10 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
     const centerY = (vertexA.y + vertexB.y) / 2;
 
     const isBuildable =
-        buildableRoads.includes(edge.id);
+        buildableRoads?.includes(edge.id);
+
+    const isShipBuildable =
+        buildableShips?.includes(edge.id);
 
     let fill = "var(--neutral-piece)";
 
@@ -26,12 +29,22 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
         fill = owner?.color ?? "var(--neutral-piece)";
     }
 
+    if (edge.ship) {
+        const owner = players.find(
+            player => player.id === edge.ship.playerId
+        );
+
+        fill = owner?.color ?? "var(--neutral-piece)";
+    }
+
     // show nothing by default
     const hasRoad = !!edge.road;
+    const hasShip = !!edge.ship;
+
     const edgeClass =
-        isBuildable
+        isBuildable || isShipBuildable
             ? "clickable-circle"
-            : hasRoad
+            : hasRoad || hasShip
                 ? "edge-existing"
                 : "clickable-circle-inactive";
     // if (!isBuildable && !hasRoad) {
@@ -67,6 +80,28 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
                 rx={radius / 3}
                 fill={fill}
                 transform={`rotate(${angle} ${centerX} ${centerY})`}
+            />
+        );
+    }
+
+    if (hasShip) {
+        const shipTip = roadLength / 2;
+        const shipWidth = radius / 2;
+
+        return (
+            <path
+                className="ship"
+                d={`
+                M ${-shipTip} 0
+                L ${-shipTip + radius} ${-shipWidth}
+                L ${shipTip - radius} ${-shipWidth}
+                L ${shipTip} 0
+                L ${shipTip - radius} ${shipWidth}
+                L ${-shipTip + radius} ${shipWidth}
+                Z
+            `}
+                fill={fill}
+                transform={`translate(${centerX} ${centerY}) rotate(${angle})`}
             />
         );
     }

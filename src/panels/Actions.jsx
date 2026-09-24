@@ -14,10 +14,12 @@ function Actions({
     player,
     buildAvailability,
     buildableRoads,
+    buildableShips,
     buildableSettlements,
     buildableCities,
     setShowTradeCreation,
-    pieces
+    pieces,
+    config
 }) {
     const isMyTurn = myPlayerId === currentPlayerId;
 
@@ -36,6 +38,12 @@ function Actions({
         isMyTurn &&
         buildAvailability?.road &&
         buildableRoads?.length > 0 &&
+        !isRoadBuildingDevCardActive;
+
+    const canBuildShip =
+        isMyTurn &&
+        buildAvailability?.ship &&
+        buildableShips?.length > 0 &&
         !isRoadBuildingDevCardActive;
 
     const canBuildSettlement =
@@ -75,6 +83,21 @@ function Actions({
                 >
                     Road x{pieces.road}
                 </button>
+
+                {config?.expansions?.seafarers && (
+                    <button
+                        disabled={!canBuildShip}
+                        onClick={() =>
+                            setBuildMode(
+                                buildMode === STRUCTURES.SHIP
+                                    ? null
+                                    : STRUCTURES.SHIP
+                            )
+                        }
+                    >
+                        Ship x{pieces.ship}
+                    </button>
+                )}
 
                 <button
                     disabled={!canBuildSettlement}

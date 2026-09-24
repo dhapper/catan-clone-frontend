@@ -60,6 +60,12 @@ function Board({
         subphase === GAMEPLAY_SUBPHASES.ACTION &&
         currentPlayerId === myPlayerId;
 
+    const canPlaceShip =
+        phase === GAME_PHASES.GAMEPLAY &&
+        subphase === GAMEPLAY_SUBPHASES.ACTION &&
+        buildMode === "ship" &&
+        currentPlayerId === myPlayerId;
+
     const canPlaceRoad =
         (
             phase === GAME_PHASES.SETUP &&
@@ -309,6 +315,11 @@ function Board({
                         buildableRoads={
                             canPlaceRoad
                                 ? board.buildableRoads
+                                : []
+                        }
+                        buildableShips={
+                            canPlaceShip
+                                ? board.buildableShips
                                 : []
                         }
                         onEdgeClick={onEdgeClick}

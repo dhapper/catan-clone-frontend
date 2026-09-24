@@ -1,8 +1,8 @@
 import "./App.css";
 import "./constants/theme.css";
 import { useEffect, useState } from "react";
-import { getGame, buildSettlement, buildRoad, buildCity, resetGame } from "./api/gameApi";
-import { SETUP_SUBPHASES, GAME_PHASES, GAMEPLAY_SUBPHASES } from "./constants/GameConstants";
+import { getGame, buildSettlement, buildRoad, buildCity, buildShip, resetGame } from "./api/gameApi";
+import { SETUP_SUBPHASES, GAME_PHASES, GAMEPLAY_SUBPHASES, STRUCTURES } from "./constants/GameConstants";
 import socket from "./services/socket";
 import Board from "./components/Board";
 import Lobby from "./panels/Lobby";
@@ -253,7 +253,11 @@ function App() {
 
     async function handleEdgeClick(edgeId) {
         try {
-            await buildRoad(lobbyCode, edgeId);
+            if (buildMode === STRUCTURES.SHIP) {
+                await buildShip(lobbyCode, edgeId);
+            } else {
+                await buildRoad(lobbyCode, edgeId);
+            }
 
             const updatedGame = await getGame(lobbyCode);
             setBoard(updatedGame);
@@ -262,7 +266,17 @@ function App() {
                 player => player.id === myPlayerId
             );
 
-            if (!currentPlayer?.roadBuildingRemaining) {
+            if (
+                buildMode === STRUCTURES.ROAD &&
+                !currentPlayer?.roadBuildingRemaining
+            ) {
+                setBuildMode(null);
+            }
+
+            if (
+                buildMode === STRUCTURES.SHIP &&
+                currentPlayer?.pieces?.ship <= 0
+            ) {
                 setBuildMode(null);
             }
 
@@ -274,19 +288,30 @@ function App() {
                             currentPlayer.resources.wood >= 1 &&
                             currentPlayer.resources.brick >= 1
                         ),
-                    settlement: currentPlayer.resources.wood >= 1 &&
+
+                    ship:
+                        config?.expansions?.seafarers &&
+                        currentPlayer.resources.wood >= 1 &&
+                        currentPlayer.resources.sheep >= 1,
+
+                    settlement:
+                        currentPlayer.resources.wood >= 1 &&
                         currentPlayer.resources.brick >= 1 &&
                         currentPlayer.resources.wheat >= 1 &&
                         currentPlayer.resources.sheep >= 1,
-                    city: currentPlayer.resources.wheat >= 2 &&
+
+                    city:
+                        currentPlayer.resources.wheat >= 2 &&
                         currentPlayer.resources.ore >= 3,
-                    developmentCard: currentPlayer.resources.ore >= 1 &&
+
+                    developmentCard:
+                        currentPlayer.resources.ore >= 1 &&
                         currentPlayer.resources.wheat >= 1 &&
                         currentPlayer.resources.sheep >= 1
                 });
             }
         } catch (error) {
-            console.error("Failed to build road:", error);
+            console.error("Failed to build:", error);
         }
     }
 
@@ -461,10 +486,12 @@ function App() {
                             )}
                             buildAvailability={buildAvailability}
                             buildableRoads={board.buildableRoads}
+                            buildableShips={board.buildableShips}
                             buildableSettlements={board.buildableSettlements}
                             buildableCities={board.buildableCities}
                             setShowTradeCreation={setShowTradeCreation}
                             pieces={myPlayer.pieces}
+                            config={config}
                         />
                     )}
 
