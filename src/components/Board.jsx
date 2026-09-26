@@ -26,6 +26,9 @@ function Board({
     setBoardPan,
     robberTileId,
     pirateTileId,
+    movableShips,
+    shipMoveDestinations,
+    selectedShipEdge,
     background = false
 }) {
     const HEX_SIZE = board.hexSize;
@@ -64,6 +67,12 @@ function Board({
         phase === GAME_PHASES.GAMEPLAY &&
         subphase === GAMEPLAY_SUBPHASES.ACTION &&
         buildMode === "ship" &&
+        currentPlayerId === myPlayerId;
+
+    const canMoveShip =
+        phase === GAME_PHASES.GAMEPLAY &&
+        subphase === GAMEPLAY_SUBPHASES.ACTION &&
+        buildMode === "ship-move" &&
         currentPlayerId === myPlayerId;
 
     const canPlaceRoad =
@@ -222,6 +231,17 @@ function Board({
         }
     }
 
+    console.log(
+        "BOARD SHIP MOVE:",
+        "canMoveShip:", canMoveShip,
+        "buildMode:", buildMode,
+        "phase:", phase,
+        "subphase:", subphase,
+        "currentPlayerId:", currentPlayerId,
+        "myPlayerId:", myPlayerId,
+        "movableShips:", movableShips
+    );
+
     return (
         <svg
             width={boardWidth}
@@ -322,6 +342,17 @@ function Board({
                                 ? board.buildableShips
                                 : []
                         }
+                        movableShips={
+                            canMoveShip && !selectedShipEdge
+                                ? movableShips
+                                : []
+                        }
+                        shipMoveDestinations={
+                            canMoveShip && selectedShipEdge
+                                ? shipMoveDestinations[selectedShipEdge] ?? []
+                                : []
+                        }
+                        selectedShipEdge={selectedShipEdge}
                         onEdgeClick={onEdgeClick}
                     />
                 ))}

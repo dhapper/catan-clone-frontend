@@ -50,6 +50,9 @@ function App() {
     const [bank, setBank] = useState(null);
     const [buildMode, setBuildMode] = useState(null);
     const [buildAvailability, setBuildAvailability] = useState(null);
+    const [movableShips, setMovableShips] = useState([]);
+    const [shipMoveDestinations, setShipMoveDestinations] = useState({});
+    const [selectedShipEdge, setSelectedShipEdge] = useState(null);
     const [currentTrade, setCurrentTrade] = useState(null);
     const [showTradeCreation, setShowTradeCreation] = useState(false);
     const [discardRequirements, setDiscardRequirements] = useState({});
@@ -108,6 +111,12 @@ function App() {
             setDiceRoll(data.diceRoll);
             setBank(data.bank);
             setBuildAvailability(data.buildAvailability);
+            setMovableShips(data.movableShips ?? []);
+            console.log(
+                "SOCKET MOVABLE SHIPS:",
+                data.movableShips
+            );
+            setShipMoveDestinations(data.shipMoveDestinations ?? {});
             setCurrentTrade(data.currentTrade);
             setDiscardRequirements(data.discardRequirements ?? {});
             setRobberTileId(data.robberTileId);
@@ -168,6 +177,7 @@ function App() {
     // when turn changes
     useEffect(() => {
         setBuildMode(null);
+        setSelectedShipEdge(null);
         setShowTradeCreation(false);
         setShowMonopoly(false);
         setShowInvention(false);
@@ -253,6 +263,37 @@ function App() {
 
     async function handleEdgeClick(edgeId) {
         try {
+            if (buildMode === "ship-move") {
+
+                // First click: select the ship to move
+                if (!selectedShipEdge) {
+                    if (!movableShips.includes(edgeId)) {
+                        return;
+                    }
+
+                    setSelectedShipEdge(edgeId);
+                    return;
+                }
+
+                // Second click: select the destination
+                const destinations =
+                    shipMoveDestinations[selectedShipEdge] ?? [];
+
+                if (!destinations.includes(edgeId)) {
+                    return;
+                }
+
+                socket.emit("game:moveShip", {
+                    fromEdgeId: selectedShipEdge,
+                    toEdgeId: edgeId
+                });
+
+                setSelectedShipEdge(null);
+                setBuildMode(null);
+
+                return;
+            }
+
             if (buildMode === STRUCTURES.SHIP) {
                 await buildShip(lobbyCode, edgeId);
             } else {
@@ -375,6 +416,15 @@ function App() {
         return <LoadingScreen />;
     }
 
+    console.log(
+        "APP MOVABLE SHIPS:",
+        movableShips,
+        "BUILD MODE:",
+        buildMode,
+        "SELECTED SHIP:",
+        selectedShipEdge
+    );
+
     return (
         <div className={`game-layout ${rightPanelOpen ? "right-open" : "right-closed"}`}>
             <div className="game-left">
@@ -489,6 +539,7 @@ function App() {
                             buildableShips={board.buildableShips}
                             buildableSettlements={board.buildableSettlements}
                             buildableCities={board.buildableCities}
+                            movableShips={movableShips}
                             setShowTradeCreation={setShowTradeCreation}
                             pieces={myPlayer.pieces}
                             config={config}
@@ -629,6 +680,9 @@ function App() {
                     setBoardPan={setBoardPan}
                     robberTileId={robberTileId}
                     pirateTileId={pirateTileId}
+                    movableShips={movableShips}
+                    shipMoveDestinations={shipMoveDestinations}
+                    selectedShipEdge={selectedShipEdge}
                 />
             </div>
 

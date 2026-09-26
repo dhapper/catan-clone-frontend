@@ -17,6 +17,7 @@ function Actions({
     buildableShips,
     buildableSettlements,
     buildableCities,
+    movableShips,
     setShowTradeCreation,
     pieces,
     config
@@ -63,6 +64,13 @@ function Actions({
         buildAvailability?.developmentCard &&
         !isRoadBuildingDevCardActive;
 
+    const canMoveShip =
+        config?.expansions?.seafarers &&
+        isMyTurn &&
+        isActionPhase &&
+        movableShips?.length > 0 &&
+        !isRoadBuildingDevCardActive;
+
     return (
         <div className="panel actions">
             <div className="header">
@@ -85,18 +93,33 @@ function Actions({
                 </button>
 
                 {config?.expansions?.seafarers && (
-                    <button
-                        disabled={!canBuildShip}
-                        onClick={() =>
-                            setBuildMode(
-                                buildMode === STRUCTURES.SHIP
-                                    ? null
-                                    : STRUCTURES.SHIP
-                            )
-                        }
-                    >
-                        Ship x{pieces.ship}
-                    </button>
+                    <>
+                        <button
+                            disabled={!canBuildShip}
+                            onClick={() =>
+                                setBuildMode(
+                                    buildMode === STRUCTURES.SHIP
+                                        ? null
+                                        : STRUCTURES.SHIP
+                                )
+                            }
+                        >
+                            Ship x{pieces.ship}
+                        </button>
+
+                        <button
+                            disabled={!canMoveShip}
+                            onClick={() =>
+                                setBuildMode(
+                                    buildMode === "ship-move"
+                                        ? null
+                                        : "ship-move"
+                                )
+                            }
+                        >
+                            Move Ship
+                        </button>
+                    </>
                 )}
 
                 <button

@@ -1,7 +1,18 @@
 import "./Edge.css";
 import "./ClickableCircle.css";
 
-function Edge({ edge, vertices, radius, players, buildableRoads, buildableShips, onEdgeClick }) {
+function Edge({
+    edge,
+    vertices,
+    radius,
+    players,
+    buildableRoads,
+    buildableShips,
+    movableShips,
+    shipMoveDestinations,
+    selectedShipEdge,
+    onEdgeClick
+}) {
     const vertexA = vertices.find(
         vertex => vertex.id === edge.vertices[0]
     );
@@ -18,6 +29,12 @@ function Edge({ edge, vertices, radius, players, buildableRoads, buildableShips,
 
     const isShipBuildable =
         buildableShips?.includes(edge.id);
+
+    const isMovableShip =
+        movableShips?.includes(edge.id);
+
+    const isShipMoveDestination =
+        shipMoveDestinations?.includes(edge.id);
 
     let fill = "var(--neutral-piece)";
 
@@ -41,8 +58,22 @@ function Edge({ edge, vertices, radius, players, buildableRoads, buildableShips,
     const hasRoad = !!edge.road;
     const hasShip = !!edge.ship;
 
+    // console.log(
+    //     "EDGE:",
+    //     edge.id,
+    //     "hasShip:",
+    //     hasShip,
+    //     "isMovableShip:",
+    //     isMovableShip,
+    //     "movableShips:",
+    //     movableShips
+    // );
+
     const edgeClass =
-        isBuildable || isShipBuildable
+        isBuildable ||
+            isShipBuildable ||
+            isMovableShip ||
+            isShipMoveDestination
             ? "clickable-circle"
             : hasRoad || hasShip
                 ? "edge-existing"
@@ -84,7 +115,30 @@ function Edge({ edge, vertices, radius, players, buildableRoads, buildableShips,
         );
     }
 
+    if (
+        selectedShipEdge === edge.id &&
+        shipMoveDestinations?.length > 0
+    ) {
+        return null;
+    }
+
     if (hasShip) {
+        if (isMovableShip) {
+            return (
+                <circle
+                    className="edge clickable-circle"
+                    cx={centerX}
+                    cy={centerY}
+                    r={radius}
+                    style={{
+                        "--hover-radius": radius * 1.2
+                    }}
+                    fill="white"
+                    onClick={() => onEdgeClick(edge.id)}
+                />
+            );
+        }
+
         const shipTip = roadLength / 2;
         const shipWidth = radius / 2;
 
@@ -118,9 +172,16 @@ function Edge({ edge, vertices, radius, players, buildableRoads, buildableShips,
             r={radius}
             style={{ "--hover-radius": radius * 1.2 }}
             fill={fill}
-            onClick={() => {
-                onEdgeClick(edge.id);
-            }}
+            // onClick={() => {
+            //     onEdgeClick(edge.id);
+            // }}
+            onClick={
+                isBuildable ||
+                    isShipBuildable ||
+                    isShipMoveDestination
+                    ? () => onEdgeClick(edge.id)
+                    : undefined
+            }
         />
     );
 }
