@@ -79,6 +79,26 @@ export async function buildRoad(lobbyCode, edgeId) {
     return response.json();
 }
 
+export async function buildShip(lobbyCode, edgeId) {
+    const response = await fetch(
+        `${API_URL}/game/${lobbyCode}/build/ship`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ edgeId })
+        }
+    );
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to build ship");
+    }
+
+    return response.json();
+}
+
 export async function buildCity(lobbyCode, vertexId) {
     const response = await fetch(
         `${API_URL}/game/${lobbyCode}/build/city`,

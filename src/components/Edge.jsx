@@ -1,7 +1,18 @@
 import "./Edge.css";
 import "./ClickableCircle.css";
 
-function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) {
+function Edge({
+    edge,
+    vertices,
+    radius,
+    players,
+    buildableRoads,
+    buildableShips,
+    movableShips,
+    shipMoveDestinations,
+    selectedShipEdge,
+    onEdgeClick
+}) {
     const vertexA = vertices.find(
         vertex => vertex.id === edge.vertices[0]
     );
@@ -14,7 +25,16 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
     const centerY = (vertexA.y + vertexB.y) / 2;
 
     const isBuildable =
-        buildableRoads.includes(edge.id);
+        buildableRoads?.includes(edge.id);
+
+    const isShipBuildable =
+        buildableShips?.includes(edge.id);
+
+    const isMovableShip =
+        movableShips?.includes(edge.id);
+
+    const isShipMoveDestination =
+        shipMoveDestinations?.includes(edge.id);
 
     let fill = "var(--neutral-piece)";
 
@@ -26,12 +46,36 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
         fill = owner?.color ?? "var(--neutral-piece)";
     }
 
+    if (edge.ship) {
+        const owner = players.find(
+            player => player.id === edge.ship.playerId
+        );
+
+        fill = owner?.color ?? "var(--neutral-piece)";
+    }
+
     // show nothing by default
     const hasRoad = !!edge.road;
+    const hasShip = !!edge.ship;
+
+    // console.log(
+    //     "EDGE:",
+    //     edge.id,
+    //     "hasShip:",
+    //     hasShip,
+    //     "isMovableShip:",
+    //     isMovableShip,
+    //     "movableShips:",
+    //     movableShips
+    // );
+
     const edgeClass =
-        isBuildable
+        isBuildable ||
+            isShipBuildable ||
+            isMovableShip ||
+            isShipMoveDestination
             ? "clickable-circle"
-            : hasRoad
+            : hasRoad || hasShip
                 ? "edge-existing"
                 : "clickable-circle-inactive";
     // if (!isBuildable && !hasRoad) {
@@ -71,6 +115,51 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
         );
     }
 
+    if (
+        selectedShipEdge === edge.id &&
+        shipMoveDestinations?.length > 0
+    ) {
+        return null;
+    }
+
+    if (hasShip) {
+        if (isMovableShip) {
+            return (
+                <circle
+                    className="edge clickable-circle"
+                    cx={centerX}
+                    cy={centerY}
+                    r={radius}
+                    style={{
+                        "--hover-radius": radius * 1.2
+                    }}
+                    fill="white"
+                    onClick={() => onEdgeClick(edge.id)}
+                />
+            );
+        }
+
+        const shipTip = roadLength / 2;
+        const shipWidth = radius / 2;
+
+        return (
+            <path
+                className="ship"
+                d={`
+                M ${-shipTip} 0
+                L ${-shipTip + radius} ${-shipWidth}
+                L ${shipTip - radius} ${-shipWidth}
+                L ${shipTip} 0
+                L ${shipTip - radius} ${shipWidth}
+                L ${-shipTip + radius} ${shipWidth}
+                Z
+            `}
+                fill={fill}
+                transform={`translate(${centerX} ${centerY}) rotate(${angle})`}
+            />
+        );
+    }
+
     // if (!isBuildable) {
     //     return null;
     // }
@@ -83,9 +172,16 @@ function Edge({ edge, vertices, radius, players, buildableRoads, onEdgeClick }) 
             r={radius}
             style={{ "--hover-radius": radius * 1.2 }}
             fill={fill}
-            onClick={() => {
-                onEdgeClick(edge.id);
-            }}
+            // onClick={() => {
+            //     onEdgeClick(edge.id);
+            // }}
+            onClick={
+                isBuildable ||
+                    isShipBuildable ||
+                    isShipMoveDestination
+                    ? () => onEdgeClick(edge.id)
+                    : undefined
+            }
         />
     );
 }

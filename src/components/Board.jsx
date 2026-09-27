@@ -25,6 +25,10 @@ function Board({
     boardPan,
     setBoardPan,
     robberTileId,
+    pirateTileId,
+    movableShips,
+    shipMoveDestinations,
+    selectedShipEdge,
     background = false
 }) {
     const HEX_SIZE = board.hexSize;
@@ -57,6 +61,18 @@ function Board({
         buildMode === "city" &&
         phase === GAME_PHASES.GAMEPLAY &&
         subphase === GAMEPLAY_SUBPHASES.ACTION &&
+        currentPlayerId === myPlayerId;
+
+    const canPlaceShip =
+        phase === GAME_PHASES.GAMEPLAY &&
+        subphase === GAMEPLAY_SUBPHASES.ACTION &&
+        buildMode === "ship" &&
+        currentPlayerId === myPlayerId;
+
+    const canMoveShip =
+        phase === GAME_PHASES.GAMEPLAY &&
+        subphase === GAMEPLAY_SUBPHASES.ACTION &&
+        buildMode === "ship-move" &&
         currentPlayerId === myPlayerId;
 
     const canPlaceRoad =
@@ -215,6 +231,17 @@ function Board({
         }
     }
 
+    console.log(
+        "BOARD SHIP MOVE:",
+        "canMoveShip:", canMoveShip,
+        "buildMode:", buildMode,
+        "phase:", phase,
+        "subphase:", subphase,
+        "currentPlayerId:", currentPlayerId,
+        "myPlayerId:", myPlayerId,
+        "movableShips:", movableShips
+    );
+
     return (
         <svg
             width={boardWidth}
@@ -233,7 +260,7 @@ function Board({
             }}
         >
 
-            <defs>
+            {/* <defs>
                 <filter
                     id="island-shadow"
                     x="-50%"
@@ -249,7 +276,7 @@ function Board({
                         floodOpacity="1"
                     />
                 </filter>
-            </defs>
+            </defs> */}
 
             <g
                 filter="url(#island-shadow)"
@@ -262,14 +289,14 @@ function Board({
                 `}
             >
 
-                {/* Ports */}
+                {/* Ports
                 {board.ports.map((port) => (
                     <Port
                         key={port.edgeId}
                         port={port}
                         vertices={board.vertices}
                     />
-                ))}
+                ))} */}
 
                 {/* Hex tiles */}
                 {board.tiles.map((tile) => (
@@ -281,8 +308,19 @@ function Board({
                         subphase={subphase}
                         canPlaceRobber={canPlaceRobber}
                         robberTileId={robberTileId}
+                        pirateTileId={pirateTileId}
                         onTileClick={onTileClick}
                         background={background}
+                    />
+                ))}
+
+                {/* Ports */}
+                {board.ports.map((port) => (
+                    <Port
+                        key={port.edgeId}
+                        port={port}
+                        vertices={board.vertices}
+                        tiles={board.tiles}
                     />
                 ))}
 
@@ -299,6 +337,22 @@ function Board({
                                 ? board.buildableRoads
                                 : []
                         }
+                        buildableShips={
+                            canPlaceShip
+                                ? board.buildableShips
+                                : []
+                        }
+                        movableShips={
+                            canMoveShip && !selectedShipEdge
+                                ? movableShips
+                                : []
+                        }
+                        shipMoveDestinations={
+                            canMoveShip && selectedShipEdge
+                                ? shipMoveDestinations[selectedShipEdge] ?? []
+                                : []
+                        }
+                        selectedShipEdge={selectedShipEdge}
                         onEdgeClick={onEdgeClick}
                     />
                 ))}

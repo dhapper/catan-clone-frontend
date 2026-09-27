@@ -3,6 +3,7 @@ import socket from "../services/socket";
 import "./Lobby.css";
 import "./Panel.css";
 import PlayerCard from "../ui/PlayerCard";
+import { SEAFARERS_MAPS } from "../constants/GameConstants";
 
 function Lobby({
     players,
@@ -14,7 +15,8 @@ function Lobby({
     victoryPointsNeeded,
     pieceLimits,
     boardLayout,
-    lobbyCode
+    lobbyCode,
+    config
 }) {
     const [name, setName] = useState("");
     const [newName, setNewName] = useState("");
@@ -159,6 +161,20 @@ function Lobby({
                                 }
                             >
                                 Reroll Board
+                            </button>
+
+                            <button
+                                onClick={() =>
+                                    socket.emit(
+                                        "game:setExpansion",
+                                        {
+                                            expansion: "seafarers",
+                                            enabled: !config?.expansions?.seafarers
+                                        }
+                                    )
+                                }
+                            >
+                                Seafarers: {config?.expansions?.seafarers ? "ON" : "OFF"}
                             </button>
                         </div>
 
@@ -403,6 +419,9 @@ function Lobby({
                         <p>Roads: {pieceLimits.road}</p>
                         <p>Settlements: {pieceLimits.settlement}</p>
                         <p>Cities: {pieceLimits.city}</p>
+                        {config?.expansions?.seafarers && (
+                            <p>Seafarers Map: {SEAFARERS_MAPS[config?.seafarers?.map]?.name}</p>
+                        )}
                     </div>
                 )}
         </div>

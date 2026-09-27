@@ -13,9 +13,9 @@ const RESOURCE_ICONS = {
     wood: woodIcon
 };
 
-function PortBadge({ port }) {
-    const iconSize = 50;
-    const portRadius = 50;
+function PortBadge({ port, size = 50 }) {
+    const iconSize = size;
+    const portRadius = size;
 
     return (
         <>

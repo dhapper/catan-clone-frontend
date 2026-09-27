@@ -1,0 +1,31 @@
+.seafarer-map-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+}
+
+.seafarer-map-option {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.seafarer-map-option input {
+    width: 20px;
+    height: 20px;
+    margin: 3px 0 0 0;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.seafarer-map-option span {
+    text-align: left;
+    line-height: 1.3;
+    font-size: 16px;
+}

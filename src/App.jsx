@@ -1,8 +1,8 @@
 import "./App.css";
 import "./constants/theme.css";
 import { useEffect, useState } from "react";
-import { getGame, buildSettlement, buildRoad, buildCity, resetGame } from "./api/gameApi";
-import { SETUP_SUBPHASES, GAME_PHASES, GAMEPLAY_SUBPHASES } from "./constants/GameConstants";
+import { getGame, buildSettlement, buildRoad, buildCity, buildShip, resetGame } from "./api/gameApi";
+import { SETUP_SUBPHASES, GAME_PHASES, GAMEPLAY_SUBPHASES, STRUCTURES } from "./constants/GameConstants";
 import socket from "./services/socket";
 import Board from "./components/Board";
 import Lobby from "./panels/Lobby";
@@ -29,6 +29,7 @@ import ViewSettings from "./panels/ViewSettings";
 import TitleScreen from "./ui/TitleScreen";
 import ConnectingToServerScreen from "./ui/ConnectingToServerScreen";
 import LoadingScreen from "./ui/LoadingScreen";
+import SeafarerSettings from "./panels/SeafarerSettings";
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
 
     const [serverConnected, setServerConnected] = useState(socket.connected);
     const [lobbyCode, setLobbyCode] = useState(null);
+    const [config, setConfig] = useState(null);
     const [board, setBoard] = useState(null);
     const [colors, setColors] = useState([]);
     const [phase, setPhase] = useState(null);
@@ -48,10 +50,14 @@ function App() {
     const [bank, setBank] = useState(null);
     const [buildMode, setBuildMode] = useState(null);
     const [buildAvailability, setBuildAvailability] = useState(null);
+    const [movableShips, setMovableShips] = useState([]);
+    const [shipMoveDestinations, setShipMoveDestinations] = useState({});
+    const [selectedShipEdge, setSelectedShipEdge] = useState(null);
     const [currentTrade, setCurrentTrade] = useState(null);
     const [showTradeCreation, setShowTradeCreation] = useState(false);
     const [discardRequirements, setDiscardRequirements] = useState({});
     const [robberTileId, setRobberTileId] = useState(null);
+    const [pirateTileId, setPirateTileId] = useState(null);
     const [robberVictims, setRobberVictims] = useState([]);
     const [showMonopoly, setShowMonopoly] = useState(false);
     const [showInvention, setShowInvention] = useState(false);
@@ -72,7 +78,7 @@ function App() {
     const [boardScale, setBoardScale] = useState(zoom);
     const [boardPan, setBoardPan] = useState({ x: 0, y: 0 });
     const [theme, setTheme] = useState("classic");
-    const [rightPanelOpen, setRightPanelOpen] = useState(true);
+    const [rightPanelOpen, setRightPanelOpen] = useState(false);
 
     const myPlayer = players.find(player => player.id === myPlayerId);
     const currentPlayer = players.find(player => player.id === currentPlayerId);
@@ -95,6 +101,7 @@ function App() {
 
             setLobbyCode(data.lobbyCode);
             console.log("Lobby code received:", data.lobbyCode);
+            setConfig(data.config);
             setColors(data.colors);
             setPhase(data.phase);
             setSubphase(data.subphase);
@@ -104,9 +111,16 @@ function App() {
             setDiceRoll(data.diceRoll);
             setBank(data.bank);
             setBuildAvailability(data.buildAvailability);
+            setMovableShips(data.movableShips ?? []);
+            console.log(
+                "SOCKET MOVABLE SHIPS:",
+                data.movableShips
+            );
+            setShipMoveDestinations(data.shipMoveDestinations ?? {});
             setCurrentTrade(data.currentTrade);
             setDiscardRequirements(data.discardRequirements ?? {});
             setRobberTileId(data.robberTileId);
+            setPirateTileId(data.pirateTileId);
             setRobberVictims(data.robberVictims ?? []);
             setRobberSafetyNumber(data.robberSafetyNumber);
             setBankResourceCount(data.bankResourceCount);
@@ -163,6 +177,7 @@ function App() {
     // when turn changes
     useEffect(() => {
         setBuildMode(null);
+        setSelectedShipEdge(null);
         setShowTradeCreation(false);
         setShowMonopoly(false);
         setShowInvention(false);
@@ -248,7 +263,42 @@ function App() {
 
     async function handleEdgeClick(edgeId) {
         try {
-            await buildRoad(lobbyCode, edgeId);
+            if (buildMode === "ship-move") {
+
+                // First click: select the ship to move
+                if (!selectedShipEdge) {
+                    if (!movableShips.includes(edgeId)) {
+                        return;
+                    }
+
+                    setSelectedShipEdge(edgeId);
+                    return;
+                }
+
+                // Second click: select the destination
+                const destinations =
+                    shipMoveDestinations[selectedShipEdge] ?? [];
+
+                if (!destinations.includes(edgeId)) {
+                    return;
+                }
+
+                socket.emit("game:moveShip", {
+                    fromEdgeId: selectedShipEdge,
+                    toEdgeId: edgeId
+                });
+
+                setSelectedShipEdge(null);
+                setBuildMode(null);
+
+                return;
+            }
+
+            if (buildMode === STRUCTURES.SHIP) {
+                await buildShip(lobbyCode, edgeId);
+            } else {
+                await buildRoad(lobbyCode, edgeId);
+            }
 
             const updatedGame = await getGame(lobbyCode);
             setBoard(updatedGame);
@@ -257,7 +307,17 @@ function App() {
                 player => player.id === myPlayerId
             );
 
-            if (!currentPlayer?.roadBuildingRemaining) {
+            if (
+                buildMode === STRUCTURES.ROAD &&
+                !currentPlayer?.roadBuildingRemaining
+            ) {
+                setBuildMode(null);
+            }
+
+            if (
+                buildMode === STRUCTURES.SHIP &&
+                currentPlayer?.pieces?.ship <= 0
+            ) {
                 setBuildMode(null);
             }
 
@@ -269,19 +329,30 @@ function App() {
                             currentPlayer.resources.wood >= 1 &&
                             currentPlayer.resources.brick >= 1
                         ),
-                    settlement: currentPlayer.resources.wood >= 1 &&
+
+                    ship:
+                        config?.expansions?.seafarers &&
+                        currentPlayer.resources.wood >= 1 &&
+                        currentPlayer.resources.sheep >= 1,
+
+                    settlement:
+                        currentPlayer.resources.wood >= 1 &&
                         currentPlayer.resources.brick >= 1 &&
                         currentPlayer.resources.wheat >= 1 &&
                         currentPlayer.resources.sheep >= 1,
-                    city: currentPlayer.resources.wheat >= 2 &&
+
+                    city:
+                        currentPlayer.resources.wheat >= 2 &&
                         currentPlayer.resources.ore >= 3,
-                    developmentCard: currentPlayer.resources.ore >= 1 &&
+
+                    developmentCard:
+                        currentPlayer.resources.ore >= 1 &&
                         currentPlayer.resources.wheat >= 1 &&
                         currentPlayer.resources.sheep >= 1
                 });
             }
         } catch (error) {
-            console.error("Failed to build road:", error);
+            console.error("Failed to build:", error);
         }
     }
 
@@ -289,12 +360,32 @@ function App() {
         await resetGame(lobbyCode);
     }
 
-    function handleTileClick(tileId) {
+    function handleTileClick(tileId, tileType) {
+        console.log("TILE CLICK DATA:", {
+            tileId,
+            tileType
+        });
+
+        // rest of function...
         if (
             phase !== GAME_PHASES.GAMEPLAY ||
             subphase !== GAMEPLAY_SUBPHASES.ROBBER_PLACEMENT ||
             currentPlayerId !== myPlayerId
         ) {
+            return;
+        }
+
+        if (tileType === "water") {
+            if (!config?.expansions?.seafarers) {
+                return;
+            }
+
+            console.log("PIRATE TILE CLICKED:", tileId);
+
+            socket.emit("game:movePirate", {
+                tileId
+            });
+
             return;
         }
 
@@ -324,6 +415,15 @@ function App() {
     if (!board) {
         return <LoadingScreen />;
     }
+
+    console.log(
+        "APP MOVABLE SHIPS:",
+        movableShips,
+        "BUILD MODE:",
+        buildMode,
+        "SELECTED SHIP:",
+        selectedShipEdge
+    );
 
     return (
         <div className={`game-layout ${rightPanelOpen ? "right-open" : "right-closed"}`}>
@@ -365,18 +465,25 @@ function App() {
 
 
                 {phase === GAME_PHASES.LOBBY && (
-                    <Lobby
-                        players={players}
-                        colors={colors}
-                        myPlayerId={myPlayerId}
-                        phase={phase}
-                        robberSafetyNumber={robberSafetyNumber}
-                        bankResourceCount={bankResourceCount}
-                        victoryPointsNeeded={victoryPointsNeeded}
-                        boardLayout={newBoardLayout}
-                        pieceLimits={pieceLimits}
-                        lobbyCode={lobbyCode}
-                    />
+                    <>
+                        <Lobby
+                            players={players}
+                            colors={colors}
+                            myPlayerId={myPlayerId}
+                            phase={phase}
+                            robberSafetyNumber={robberSafetyNumber}
+                            bankResourceCount={bankResourceCount}
+                            victoryPointsNeeded={victoryPointsNeeded}
+                            boardLayout={newBoardLayout}
+                            pieceLimits={pieceLimits}
+                            lobbyCode={lobbyCode}
+                            config={config}
+                        />
+
+                        {myPlayer?.isHost && config?.expansions?.seafarers && (
+                            <SeafarerSettings config={config} />
+                        )}
+                    </>
                 )}
 
                 {(phase === GAME_PHASES.SETUP || phase === GAME_PHASES.GAMEPLAY) && (
@@ -429,10 +536,13 @@ function App() {
                             )}
                             buildAvailability={buildAvailability}
                             buildableRoads={board.buildableRoads}
+                            buildableShips={board.buildableShips}
                             buildableSettlements={board.buildableSettlements}
                             buildableCities={board.buildableCities}
+                            movableShips={movableShips}
                             setShowTradeCreation={setShowTradeCreation}
                             pieces={myPlayer.pieces}
+                            config={config}
                         />
                     )}
 
@@ -569,6 +679,10 @@ function App() {
                     boardPan={boardPan}
                     setBoardPan={setBoardPan}
                     robberTileId={robberTileId}
+                    pirateTileId={pirateTileId}
+                    movableShips={movableShips}
+                    shipMoveDestinations={shipMoveDestinations}
+                    selectedShipEdge={selectedShipEdge}
                 />
             </div>
 

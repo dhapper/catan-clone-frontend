@@ -14,10 +14,13 @@ function Actions({
     player,
     buildAvailability,
     buildableRoads,
+    buildableShips,
     buildableSettlements,
     buildableCities,
+    movableShips,
     setShowTradeCreation,
-    pieces
+    pieces,
+    config
 }) {
     const isMyTurn = myPlayerId === currentPlayerId;
 
@@ -38,6 +41,12 @@ function Actions({
         buildableRoads?.length > 0 &&
         !isRoadBuildingDevCardActive;
 
+    const canBuildShip =
+        isMyTurn &&
+        buildAvailability?.ship &&
+        buildableShips?.length > 0 &&
+        !isRoadBuildingDevCardActive;
+
     const canBuildSettlement =
         isMyTurn &&
         buildAvailability?.settlement &&
@@ -53,6 +62,13 @@ function Actions({
     const canBuyDevCard =
         isMyTurn &&
         buildAvailability?.developmentCard &&
+        !isRoadBuildingDevCardActive;
+
+    const canMoveShip =
+        config?.expansions?.seafarers &&
+        isMyTurn &&
+        isActionPhase &&
+        movableShips?.length > 0 &&
         !isRoadBuildingDevCardActive;
 
     return (
@@ -75,6 +91,36 @@ function Actions({
                 >
                     Road x{pieces.road}
                 </button>
+
+                {config?.expansions?.seafarers && (
+                    <>
+                        <button
+                            disabled={!canBuildShip}
+                            onClick={() =>
+                                setBuildMode(
+                                    buildMode === STRUCTURES.SHIP
+                                        ? null
+                                        : STRUCTURES.SHIP
+                                )
+                            }
+                        >
+                            Ship x{pieces.ship}
+                        </button>
+
+                        <button
+                            disabled={!canMoveShip}
+                            onClick={() =>
+                                setBuildMode(
+                                    buildMode === "ship-move"
+                                        ? null
+                                        : "ship-move"
+                                )
+                            }
+                        >
+                            Move Ship
+                        </button>
+                    </>
+                )}
 
                 <button
                     disabled={!canBuildSettlement}

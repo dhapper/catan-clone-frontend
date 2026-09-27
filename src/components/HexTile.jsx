@@ -4,6 +4,7 @@ import mountainBg from "../assets/tileBg/mountain.jpg";
 import pastureBg from "../assets/tileBg/pasture.jpg";
 import fieldBg from "../assets/tileBg/field.jpg";
 import forestBg from "../assets/tileBg/forest.jpg";
+import waterBg from "../assets/tileBg/waterTile.jpg";
 
 import brickIcon from "../assets/icons/transparent_res/brick-pile.svg";
 import sheepIcon from "../assets/icons/transparent_res/sheep.svg";
@@ -16,6 +17,7 @@ import Robber from "./Robber";
 import { GAMEPLAY_SUBPHASES } from "../constants/GameConstants";
 
 import "./HexTile.css";
+import Pirate from "./Pirate";
 
 const TILE_BACKGROUNDS = {
     desert: desertBg,
@@ -23,7 +25,8 @@ const TILE_BACKGROUNDS = {
     mountain: mountainBg,
     pasture: pastureBg,
     field: fieldBg,
-    forest: forestBg
+    forest: forestBg,
+    water: waterBg
 };
 
 const RESOURCE_ICONS = {
@@ -52,6 +55,7 @@ function HexTile({
     subphase,
     canPlaceRobber,
     robberTileId,
+    pirateTileId,
     onTileClick,
     background
 }) {
@@ -102,7 +106,7 @@ function HexTile({
             return;
         }
 
-        onTileClick?.(tile.id);
+        onTileClick?.(tile.id, tile.type);
     }
 
     const isNew = document.documentElement.dataset.theme === "new";
@@ -200,15 +204,29 @@ function HexTile({
                 </>
             )}
 
-            <Robber
-                x={tile.x}
-                y={tile.y}
-                size={size}
-                // canPlace={canPlaceRobber}
-                canPlace={canPlaceRobber && robberTileId !== tile.id}
-                visible={robberTileId === tile.id}
-                tileType={tile.type}
-            />
+            {tile.type != "water" && (
+                <Robber
+                    x={tile.x}
+                    y={tile.y}
+                    size={size}
+                    // canPlace={canPlaceRobber}
+                    canPlace={canPlaceRobber && robberTileId !== tile.id}
+                    visible={robberTileId === tile.id}
+                    tileType={tile.type}
+                />
+            )}
+
+            {tile.type === "water" && (
+                <Pirate
+                    x={tile.x}
+                    y={tile.y}
+                    size={size / 2}
+                    canPlace={canPlaceRobber && pirateTileId !== tile.id}
+                    visible={pirateTileId === tile.id}
+                    tileType={tile.type}
+                />
+            )}
+
         </g>
     );
 }
